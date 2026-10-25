@@ -1,26 +1,430 @@
-<nav class="home-menu">
-  <button onclick="showHome()">🏠 Home</button>
-  <button onclick="showProfile()">👤 Profile</button>
-  <button onclick="showFriends()">👥 Friends</button>
-  <button onclick="showFeed()">📰 Posts</button>
-</nav>
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Social Hub</title>
 
 <style>
-.home-menu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px;
-  background: white;
-  justify-content: center;
+* {
+    box-sizing: border-box;
 }
-.home-menu button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 8px;
-  background: #087fca;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    color: #222;
+}
+
+header {
+    background: #087fa5;
+    color: white;
+    padding: 20px 10px;
+    text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 15px;
+    background: white;
+}
+
+nav button {
+    border: none;
+    border-radius: 9px;
+    background: #0797b5;
+    color: white;
+    padding: 13px 18px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+nav button:hover {
+    background: #056b87;
+}
+
+main {
+    max-width: 750px;
+    margin: 20px auto;
+    padding: 12px;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 7px #00000012;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+textarea {
+    min-height: 90px;
+}
+
+.action {
+    background: #0789a8;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 7px;
+    cursor: pointer;
+    margin: 5px 3px 5px 0;
+}
+
+.post-media {
+    max-width: 100%;
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.social-links a {
+    display: inline-block;
+    padding: 10px;
+    margin: 5px;
+    background: #e1f5fa;
+    color: #075b78;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+small {
+    color: #777;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #666;
 }
 </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌐 My Social Hub</h1>
+    <p>آپ کی اپنی سوشل میڈیا ویب سائٹ</p>
+</header>
+
+<nav>
+    <button onclick="showPage('home')">🏠 Home</button>
+    <button onclick="showPage('profile')">👤 Profile</button>
+    <button onclick="showPage('friends')">👥 Friends</button>
+    <button onclick="showPage('posts')">📝 Posts</button>
+</nav>
+
+<main>
+
+<section id="home" class="page active">
+    <div class="card">
+        <h2>🏠 Welcome to My Social Hub</h2>
+        <p>یہاں آپ اپنی پوسٹس بنائیں، تصاویر اور ویڈیوز شیئر کریں اور دوستوں سے رابطہ رکھیں۔</p>
+        <button class="action" onclick="showPage('posts')">
+            نئی پوسٹ بنائیں
+        </button>
+        <button class="action" onclick="showPage('friends')">
+            دوست دیکھیں
+        </button>
+    </div>
+
+    <div id="homePosts"></div>
+</section>
+
+<section id="profile" class="page">
+    <div class="card">
+        <h2>👤 میری پروفائل</h2>
+        <input id="userName" placeholder="اپنا نام لکھیں">
+        <input id="userBio" placeholder="اپنے بارے میں لکھیں">
+        <button class="action" onclick="saveProfile()">پروفائل محفوظ کریں</button>
+        <div id="profileInfo"></div>
+    </div>
+</section>
+
+<section id="friends" class="page">
+    <div class="card">
+        <h2>👥 Friends & Following</h2>
+        <p>دوستوں کے نام شامل کریں۔ یہ فہرست اسی براؤزر میں محفوظ ہوگی۔</p>
+        <input id="friendName" placeholder="دوست کا نام">
+        <button class="action" onclick="addFriend()">دوست شامل کریں</button>
+        <div id="friendList"></div>
+    </div>
+</section>
+
+<section id="posts" class="page">
+    <div class="card">
+        <h2>📝 نئی پوسٹ</h2>
+        <textarea id="postText" placeholder="آپ کیا سوچ رہے ہیں؟"></textarea>
+        <label>تصویر یا ویڈیو منتخب کریں:</label>
+        <input id="postFile" type="file" accept="image/*,video/*">
+        <button class="action" onclick="addPost()">پوسٹ شیئر کریں</button>
+    </div>
+    <div id="allPosts"></div>
+</section>
+
+<div class="card">
+    <h3>🔗 Social Media</h3>
+    <div class="social-links">
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.tiktok.com/" target="_blank" rel="noopener">TikTok</a>
+        <a href="https://www.youtube.com/" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <small>یہ لنکس متعلقہ سوشل میڈیا ویب سائٹس کھولتے ہیں۔</small>
+</div>
+
+</main>
+
+<footer>My Social Hub © 2026</footer>
+
+<script>
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(function(page) {
+        page.classList.remove('active');
+    });
+
+    document.getElementById(pageId).classList.add('active');
+
+    if (pageId === 'home') renderPosts('homePosts');
+    if (pageId === 'posts') renderPosts('allPosts');
+    if (pageId === 'friends') renderFriends();
+    if (pageId === 'profile') loadProfile();
+
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function getPosts() {
+    try {
+        return JSON.parse(localStorage.getItem('myHubPosts') || '[]');
+    } catch (e) {
+        return [];
+    }
+}
+
+function addPost() {
+    const text = document.getElementById('postText').value.trim();
+    const fileInput = document.getElementById('postFile');
+    const file = fileInput.files[0];
+
+    if (!text && !file) {
+        alert('پہلے کچھ لکھیں یا تصویر/ویڈیو منتخب کریں۔');
+        return;
+    }
+
+    if (file && file.size > 5 * 1024 * 1024) {
+        alert('فائل 5 MB سے چھوٹی منتخب کریں۔');
+        return;
+    }
+
+    const save = function(media) {
+        const posts = getPosts();
+        posts.unshift({
+            id: Date.now(),
+            text: text,
+            media: media || '',
+            type: file ? file.type : '',
+            likes: 0,
+            comments: []
+        });
+
+        try {
+            localStorage.setItem('myHubPosts', JSON.stringify(posts));
+            document.getElementById('postText').value = '';
+            fileInput.value = '';
+            renderPosts('allPosts');
+            renderPosts('homePosts');
+            alert('آپ کی پوسٹ شامل ہوگئی!');
+        } catch (e) {
+            alert('اس براؤزر کی اسٹوریج بھر گئی ہے۔ چھوٹی فائل منتخب کریں۔');
+        }
+    };
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function() { save(reader.result); };
+        reader.onerror = function() { alert('فائل نہیں پڑھی جا سکی۔'); };
+        reader.readAsDataURL(file);
+    } else {
+        save('');
+    }
+}
+
+function renderPosts(containerId) {
+    const container = document.getElementById(containerId);
+    const posts = getPosts();
+
+    if (!posts.length) {
+        container.innerHTML =
+            '<div class="card"><p>ابھی کوئی پوسٹ نہیں۔ اپنی پہلی پوسٹ شیئر کریں!</p></div>';
+        return;
+    }
+
+    container.innerHTML = posts.map(function(post) {
+        const media = post.media
+            ? (post.type && post.type.startsWith('video/')
+                ? '<video class="post-media" controls playsinline src="' + post.media + '"></video>'
+                : '<img class="post-media" src="' + post.media + '" alt="Post image">')
+            : '';
+
+        return '<div class="card">' +
+            '<h3>👤 My Social Hub User</h3>' +
+            '<p>' + escapeHTML(post.text) + '</p>' +
+            media +
+            '<p>❤️ ' + post.likes + ' لائکس</p>' +
+            '<button class="action" onclick="likePost(' + post.id + ')">❤️ Like</button>' +
+            '<button class="action" onclick="commentPost(' + post.id + ')">💬 Comment</button>' +
+            '<button class="action" onclick="sharePost(' + post.id + ')">↗ Share</button>' +
+            '<div>' + post.comments.map(function(c) {
+                return '<p>💬 ' + escapeHTML(c) + '</p>';
+            }).join('') + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function(char) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char];
+    });
+}
+
+function likePost(id) {
+    const posts = getPosts();
+    const post = posts.find(function(p) { return p.id === id; });
+    if (post) {
+        post.likes++;
+        localStorage.setItem('myHubPosts', JSON.stringify(posts));
+        renderPosts('allPosts');
+        renderPosts('homePosts');
+    }
+}
+
+function commentPost(id) {
+    const comment = prompt('اپنا کمنٹ لکھیں:');
+    if (!comment || !comment.trim()) return;
+
+    const posts = getPosts();
+    const post = posts.find(function(p) { return p.id === id; });
+    if (post) {
+        post.comments.push(comment.trim());
+        localStorage.setItem('myHubPosts', JSON.stringify(posts));
+        renderPosts('allPosts');
+        renderPosts('homePosts');
+    }
+}
+
+function sharePost(id) {
+    const post = getPosts().find(function(p) { return p.id === id; });
+    if (!post) return;
+
+    const text = post.text || 'My Social Hub post';
+    if (navigator.share) {
+        navigator.share({title: 'My Social Hub', text: text})
+            .catch(function() {});
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+            .then(function() { alert('پوسٹ کا متن کاپی ہوگیا۔'); })
+            .catch(function() { prompt('یہ متن کاپی کریں:', text); });
+    } else {
+        prompt('یہ متن کاپی کریں:', text);
+    }
+}
+
+function saveProfile() {
+    const name = document.getElementById('userName').value.trim();
+    const bio = document.getElementById('userBio').value.trim();
+
+    localStorage.setItem('myHubProfile', JSON.stringify({name: name, bio: bio}));
+    loadProfile();
+    alert('پروفائل محفوظ ہوگئی۔');
+}
+
+function loadProfile() {
+    let profile = {};
+    try {
+        profile = JSON.parse(localStorage.getItem('myHubProfile') || '{}');
+    } catch(e) {}
+
+    document.getElementById('userName').value = profile.name || '';
+    document.getElementById('userBio').value = profile.bio || '';
+    document.getElementById('profileInfo').innerHTML =
+        '<p><b>نام:</b> ' + escapeHTML(profile.name || 'ابھی نام شامل نہیں') +
+        '</p><p><b>تعارف:</b> ' + escapeHTML(profile.bio || 'ابھی تعارف شامل نہیں') + '</p>';
+}
+
+function getFriends() {
+    try {
+        return JSON.parse(localStorage.getItem('myHubFriends') || '[]');
+    } catch(e) {
+        return [];
+    }
+}
+
+function addFriend() {
+    const input = document.getElementById('friendName');
+    const name = input.value.trim();
+
+    if (!name) {
+        alert('دوست کا نام لکھیں۔');
+        return;
+    }
+
+    const friends = getFriends();
+    friends.push(name);
+    localStorage.setItem('myHubFriends', JSON.stringify(friends));
+    input.value = '';
+    renderFriends();
+}
+
+function renderFriends() {
+    const friends = getFriends();
+    document.getElementById('friendList').innerHTML = friends.length
+        ? friends.map(function(name, i) {
+            return '<div class="card"><b>👤 ' + escapeHTML(name) +
+                '</b> <button class="action" onclick="removeFriend(' + i +
+                ')">Unfollow / ہٹائیں</button></div>';
+        }).join('')
+        : '<p>ابھی کوئی دوست شامل نہیں۔</p>';
+}
+
+function removeFriend(index) {
+    const friends = getFriends();
+    friends.splice(index, 1);
+    localStorage.setItem('myHubFriends', JSON.stringify(friends));
+    renderFriends();
+}
+
+renderPosts('homePosts');
+renderPosts('allPosts');
+loadProfile();
+renderFriends();
+</script>
+
+</body>
+</html>
