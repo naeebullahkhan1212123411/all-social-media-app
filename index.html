@@ -1,239 +1,26 @@
-<!DOCTYPE html>
-<html lang="ur">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Social Hub</title>
+<nav class="home-menu">
+  <button onclick="showHome()">🏠 Home</button>
+  <button onclick="showProfile()">👤 Profile</button>
+  <button onclick="showFriends()">👥 Friends</button>
+  <button onclick="showFeed()">📰 Posts</button>
+</nav>
 
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f0f2f5;
-  color:#222;
+.home-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+  justify-content: center;
 }
-header{
-  background:#1877f2;
-  color:white;
-  padding:16px;
-  font-size:24px;
-  font-weight:bold;
+.home-menu button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #087fca;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
 }
-.container{
-  max-width:650px;
-  margin:18px auto;
-  padding:12px;
-}
-.card{
-  background:white;
-  padding:16px;
-  border-radius:12px;
-  margin-bottom:15px;
-  box-shadow:0 2px 6px #0001;
-}
-h2,h3{margin-top:5px}
-button{
-  background:#1877f2;
-  color:white;
-  border:0;
-  border-radius:7px;
-  padding:10px 14px;
-  margin:4px 2px;
-  cursor:pointer;
-}
-button.secondary{background:#606770}
-input,textarea,select{
-  display:block;
-  width:100%;
-  padding:12px;
-  margin:9px 0;
-  border:1px solid #ccd0d5;
-  border-radius:7px;
-  font-size:15px;
-}
-.stat-row{
-  display:flex;
-  justify-content:space-around;
-  text-align:center;
-  gap:8px;
-  margin:16px 0;
-}
-.stat{background:#f0f2f5;padding:12px 5px;border-radius:8px;flex:1}
-.stat strong{display:block;font-size:22px;color:#1877f2}
-.hidden{display:none}
-.person{
-  border-bottom:1px solid #ddd;
-  padding:12px 0;
-}
-small{color:#606770}
 </style>
-</head>
-
-<body>
-<header>🌐 My Social Hub</header>
-
-<div class="container">
-
-<div class="card">
-<h2>👤 My Profile</h2>
-<input id="name" placeholder="Aap ka poora naam">
-<input id="username" placeholder="Username">
-<input id="photo" placeholder="Profile photo URL (optional)">
-<textarea id="bio" placeholder="Apne baare mein likhein"></textarea>
-
-<div class="stat-row">
-  <div class="stat"><strong id="friends">0</strong>Friends</div>
-  <div class="stat"><strong id="followers">0</strong>Followers</div>
-  <div class="stat"><strong id="following">0</strong>Following</div>
-</div>
-
-<button onclick="saveProfile()">Save Profile</button>
-</div>
-
-<div class="card">
-<h3>📝 Personal Details</h3>
-<input id="city" placeholder="City">
-<input id="work" placeholder="Job / Profession">
-<input id="education" placeholder="Education">
-<input id="birthday" type="date" aria-label="Birthday">
-<select id="privacy">
-<option value="private">Personal details: Only me</option>
-<option value="public">Personal details: Public</option>
-</select>
-<button onclick="saveDetails()">Save Personal Details</button>
-<p id="detailMessage"></p>
-</div>
-
-<div class="card">
-<h3>👥 Find People</h3>
-<p><small>Demo ke liye logon ki list:</small></p>
-<div id="people"></div>
-</div>
-
-<div class="card">
-<h3>🤝 My Friends</h3>
-<div id="friendList">Abhi koi friend nahi.</div>
-</div>
-
-<div class="card">
-<h3>➕ My Following</h3>
-<div id="followingList">Abhi aap kisi ko follow nahi kar rahe.</div>
-</div>
-
-<div class="card">
-<h3>🔔 My Followers</h3>
-<div id="followerList">Abhi koi follower nahi.</div>
-</div>
-
-</div>
-
-<script>
-const demoPeople = [
- {id:1,name:"Ali Ahmed"},
- {id:2,name:"Sara Khan"},
- {id:3,name:"Usman Malik"},
- {id:4,name:"Ayesha Noor"},
- {id:5,name:"Ahmed Raza"}
-];
-
-let friends = JSON.parse(localStorage.getItem("msh_friends") || "[]");
-let following = JSON.parse(localStorage.getItem("msh_following") || "[]");
-let followers = JSON.parse(localStorage.getItem("msh_followers") || "[]");
-
-function persist(){
- localStorage.setItem("msh_friends",JSON.stringify(friends));
- localStorage.setItem("msh_following",JSON.stringify(following));
- localStorage.setItem("msh_followers",JSON.stringify(followers));
-}
-
-function saveProfile(){
- const profile = {
-  name:document.getElementById("name").value,
-  username:document.getElementById("username").value,
-  photo:document.getElementById("photo").value,
-  bio:document.getElementById("bio").value
- };
- localStorage.setItem("msh_profile",JSON.stringify(profile));
- alert("Profile save ho gayi!");
-}
-
-function saveDetails(){
- const details = {
-  city:document.getElementById("city").value,
-  work:document.getElementById("work").value,
-  education:document.getElementById("education").value,
-  birthday:document.getElementById("birthday").value,
-  privacy:document.getElementById("privacy").value
- };
- localStorage.setItem("msh_details",JSON.stringify(details));
- document.getElementById("detailMessage").textContent =
- "Personal details is device par save ho gayi hain.";
-}
-
-function addFriend(id){
- if(!friends.includes(id)) friends.push(id);
- if(!following.includes(id)) following.push(id);
- persist();
- render();
-}
-
-function removeFriend(id){
- friends=friends.filter(x=>x!==id);
- persist();
- render();
-}
-
-function follow(id){
- if(!following.includes(id)) following.push(id);
- persist();
- render();
-}
-
-function unfollow(id){
- following=following.filter(x=>x!==id);
- persist();
- render();
-}
-
-function render(){
- document.getElementById("friends").textContent=friends.length;
- document.getElementById("following").textContent=following.length;
- document.getElementById("followers").textContent=followers.length;
-
- document.getElementById("people").innerHTML=demoPeople.map(p=>`
- <div class="person">
- <strong>${p.name}</strong><br>
- ${friends.includes(p.id)
- ? `<button class="secondary" onclick="removeFriend(${p.id})">Unfriend</button>`
- : `<button onclick="addFriend(${p.id})">Add Friend</button>`}
- ${following.includes(p.id)
- ? `<button class="secondary" onclick="unfollow(${p.id})">Unfollow</button>`
- : `<button onclick="follow(${p.id})">Follow</button>`}
- </div>`).join("");
-
- document.getElementById("friendList").innerHTML=
- friends.length ? friends.map(id=>`<p>${demoPeople.find(p=>p.id===id)?.name||"User"}</p>`).join("") : "Abhi koi friend nahi.";
-
- document.getElementById("followingList").innerHTML=
- following.length ? following.map(id=>`<p>${demoPeople.find(p=>p.id===id)?.name||"User"} <button class="secondary" onclick="unfollow(${id})">Unfollow</button></p>`).join("") : "Abhi aap kisi ko follow nahi kar rahe.";
-
- document.getElementById("followerList").innerHTML=
- followers.length ? followers.map(id=>`<p>${demoPeople.find(p=>p.id===id)?.name||"User"}</p>`).join("") : "Abhi koi follower nahi.";
-}
-
-function loadSaved(){
- const p=JSON.parse(localStorage.getItem("msh_profile")||"{}");
- const d=JSON.parse(localStorage.getItem("msh_details")||"{}");
- ["name","username","photo","bio"].forEach(k=>{
-  if(p[k]) document.getElementById(k).value=p[k];
- });
- ["city","work","education","birthday","privacy"].forEach(k=>{
-  if(d[k]) document.getElementById(k).value=d[k];
- });
-}
-loadSaved();
-render();
-</script>
-</body>
-</html>
