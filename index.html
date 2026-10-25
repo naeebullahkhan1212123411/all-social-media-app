@@ -1,259 +1,311 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="ur">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Social Hub</title>
-<style>
-* {
-  box-sizing: border-box;
-}
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f0f2f5;
-  color: #222;
-}
-header {
-  background: #1877f2;
-  color: white;
-  padding: 18px;
-  text-align: center;
-}
-header h1 {
-  margin: 0 0 12px;
-}
-header input {
-  width: 100%;
-  max-width: 450px;
-  padding: 12px;
-  border: none;
-  border-radius: 20px;
-}
-nav {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 8px;
-  background: white;
-  padding: 12px;
-  box-shadow: 0 2px 5px #ccc;
-}
-nav a {
-  color: #1877f2;
-  text-decoration: none;
-  font-weight: bold;
-}
-.container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 12px;
-}
-.card {
-  background: white;
-  padding: 18px;
-  margin-bottom: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #ddd;
-}
-textarea {
-  width: 100%;
-  min-height: 85px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  resize: vertical;
-}
-button {
-  background: #1877f2;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  cursor: pointer;
-  margin-top: 10px;
-}
-button:hover {
-  background: #0d5fc5;
-}
-.post {
-  overflow-wrap: anywhere;
-}
-.post p {
-  white-space: pre-wrap;
-}
-.actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.actions button {
-  flex: 1;
-}
-.small {
-  color: #666;
-  font-size: 13px;
-}
-footer {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Social Hub</title>
+  <style>
+    :root { --blue:#0788c9; --blue-dark:#066da3; --bg:#f3f6f9; --text:#243342; --muted:#718096; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Arial, "Noto Nastaliq Urdu", sans-serif; color:var(--text); background:var(--bg); }
+    .hero { padding:32px 16px 26px; text-align:center; color:white; background:linear-gradient(135deg,#0879bd,#05b8d4); }
+    .hero h1 { margin:0 0 8px; font-size:clamp(27px,5vw,42px); }
+    .hero p { margin:0 0 20px; font-size:17px; }
+    .search { width:min(640px,100%); padding:14px 18px; border:0; border-radius:30px; font-size:16px; outline:none; }
+    nav { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px max(16px,calc((100% - 1000px)/2)); background:#fff; box-shadow:0 2px 8px #0000000d; flex-wrap:wrap; }
+    nav a, nav button { color:var(--blue-dark); font-size:16px; font-weight:700; text-decoration:none; border:0; background:none; cursor:pointer; padding:8px; }
+    .wrap { width:min(760px,calc(100% - 28px)); margin:26px auto 50px; }
+    .card { background:#fff; border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:0 5px 22px #1b3b530d; }
+    h2 { margin:0 0 18px; font-size:25px; }
+    .field { display:block; width:100%; padding:13px 14px; margin:10px 0; border:1px solid #d9e1e8; border-radius:9px; font-size:16px; background:white; }
+    textarea.field { min-height:110px; resize:vertical; }
+    .btn { border:0; border-radius:9px; background:var(--blue); color:#fff; padding:12px 18px; font-size:16px; font-weight:700; cursor:pointer; }
+    .btn:hover { background:var(--blue-dark); }
+    .btn.secondary { background:#e8f4fb; color:#086c9e; }
+    .btn.danger { background:#d64545; }
+    .small { color:var(--muted); font-size:14px; line-height:1.5; }
+    .switch { margin-top:15px; }
+    .switch button { color:var(--blue-dark); border:0; background:none; cursor:pointer; font-weight:bold; font-size:15px; }
+    .hidden { display:none !important; }
+    .notice { padding:11px 13px; border-radius:9px; margin:12px 0; background:#e8f7ee; color:#17633a; }
+    .notice.error { background:#fff0f0; color:#a52828; }
+    .post { border:1px solid #e8edf1; padding:17px; border-radius:12px; margin-top:14px; overflow-wrap:anywhere; }
+    .post-head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; }
+    .post-name { font-weight:700; }
+    .post-date { color:var(--muted); font-size:12px; }
+    .post-content { white-space:pre-wrap; line-height:1.6; }
+    .empty { text-align:center; padding:24px; color:var(--muted); }
+    footer { text-align:center; color:var(--muted); padding:20px; font-size:13px; }
+    @media(max-width:520px) { .card{padding:18px} nav{justify-content:center} .hero{padding-top:25px} }
+  </style>
 </head>
 <body>
+  <header class="hero">
+    <h1>🌐 My Social Hub</h1>
+    <p>Share your world with everyone!</p>
+    <input id="searchInput" class="search" type="search" placeholder="Search posts..." aria-label="Search posts">
+  </header>
 
-<header>
-  <h1>🌐 My Social Hub</h1>
-  <p>Share your world with everyone!</p>
-  <input id="search" placeholder="Search posts..."
-         oninput="showPosts()">
-</header>
+  <nav>
+    <a href="#" id="homeLink">🏠 Home</a>
+    <a href="#" id="createLink">✍️ Create Post</a>
+    <a href="#" id="aboutLink">ℹ️ About</a>
+    <span id="navUser" class="small"></span>
+    <button id="logoutBtn" class="hidden">Logout</button>
+  </nav>
 
-<nav>
-  <a href="#home">🏠 Home</a>
-  <a href="#create">✍️ Create Post</a>
-  <a href="#about">ℹ️ About</a>
-</nav>
+  <main class="wrap">
+    <section id="authCard" class="card">
+      <div id="authNotice" class="hidden" role="status"></div>
+      <div id="loginPanel">
+        <h2>Login</h2>
+        <p class="small">اپنے اکاؤنٹ میں داخل ہونے کے لیے ای میل اور پاس ورڈ لکھیں۔</p>
+        <form id="loginForm">
+          <input class="field" id="loginEmail" type="email" placeholder="Email address" autocomplete="email" required>
+          <input class="field" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
+          <button class="btn" type="submit">Login</button>
+        </form>
+        <p class="switch">اکاؤنٹ نہیں ہے؟ <button id="showSignup" type="button">Sign Up کریں</button></p>
+      </div>
+      <div id="signupPanel" class="hidden">
+        <h2>Create Account / Sign Up</h2>
+        <p class="small">نیا اکاؤنٹ بنانے کے لیے نیچے معلومات درج کریں۔</p>
+        <form id="signupForm">
+          <input class="field" id="signupName" type="text" placeholder="Your full name" autocomplete="name" maxlength="60" required>
+          <input class="field" id="signupEmail" type="email" placeholder="Email address" autocomplete="email" required>
+          <input class="field" id="signupPassword" type="password" placeholder="Create password (at least 6 characters)" autocomplete="new-password" minlength="6" required>
+          <input class="field" id="signupConfirm" type="password" placeholder="Confirm password" autocomplete="new-password" minlength="6" required>
+          <button class="btn" type="submit">Create Account</button>
+        </form>
+        <p class="switch">پہلے سے اکاؤنٹ ہے؟ <button id="showLogin" type="button">Login کریں</button></p>
+      </div>
+      <p class="small">اہم: یہ ایک demo ویب سائٹ ہے۔ اکاؤنٹ اسی browser/device میں محفوظ ہوگا۔</p>
+    </section>
 
-<main class="container" id="home">
+    <section id="welcomeCard" class="card hidden">
+      <h2 id="welcomeTitle">Welcome!</h2>
+      <p>آپ لاگ اِن ہیں۔ اب آپ پوسٹ شائع کر سکتے ہیں۔</p>
+      <button id="goCreateBtn" class="btn">✍️ Create Post</button>
+    </section>
 
-  <section class="card" id="create">
-    <h2>Create a Post</h2>
-    <input id="author" placeholder="Your name"
-      style="width:100%;padding:12px;margin-bottom:10px">
-    <textarea id="message"
-      placeholder="What is on your mind?"></textarea>
-    <button onclick="addPost()">Publish Post</button>
-    <p class="small">Posts are saved in this browser.</p>
-  </section>
+    <section id="createCard" class="card hidden">
+      <h2>Create a Post</h2>
+      <form id="postForm">
+        <textarea id="postContent" class="field" placeholder="What is on your mind?" maxlength="2000" required></textarea>
+        <button class="btn" type="submit">Publish Post</button>
+      </form>
+      <p class="small">Posts are saved in this browser.</p>
+      <div id="postNotice" class="hidden" role="status"></div>
+    </section>
 
-  <section id="posts"></section>
+    <section id="feedCard" class="card">
+      <h2>Recent Posts</h2>
+      <div id="postsList"><p class="empty">ابھی کوئی پوسٹ نہیں ہے۔</p></div>
+    </section>
 
-  <section class="card" id="about">
-    <h2>About My Social Hub</h2>
-    <p>Share messages, like posts and connect with people.</p>
-    <p class="small">
-      This is a starter demo. Real accounts, online messaging
-      and sharing between devices need a backend service.
-    </p>
-  </section>
-</main>
+    <section id="aboutCard" class="card hidden">
+      <h2>About My Social Hub</h2>
+      <p>My Social Hub ایک سادہ social posting demo ہے، جہاں آپ اکاؤنٹ بنا کر پوسٹس شائع کر سکتے ہیں۔</p>
+      <p class="small">اس single-file demo میں اکاؤنٹس اور پوسٹس آپ کے browser کے local storage میں محفوظ ہوتی ہیں۔ دوسرے لوگوں کے ساتھ حقیقی مشترکہ استعمال کے لیے secure backend اور database درکار ہیں۔</p>
+    </section>
+  </main>
+  <footer>My Social Hub · Demo version</footer>
 
-<footer>Made with ❤️ by You</footer>
+  <script>
+    const USERS_KEY = "mySocialHubUsers_v1";
+    const POSTS_KEY = "mySocialHubPosts_v1";
+    const SESSION_KEY = "mySocialHubSession_v1";
+    const $ = (id) => document.getElementById(id);
 
-<script>
-let posts = [];
+    function readStore(key, fallback) {
+      try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
+      catch { return fallback; }
+    }
+    function saveStore(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+    function getUsers() { return readStore(USERS_KEY, []); }
+    function getPosts() { return readStore(POSTS_KEY, []); }
+    function currentUser() {
+      const email = localStorage.getItem(SESSION_KEY);
+      return email ? getUsers().find(u => u.email === email) || null : null;
+    }
+    function showNotice(element, message, error = false) {
+      element.textContent = message;
+      element.className = error ? "notice error" : "notice";
+    }
+    function clearNotice(element) { element.textContent = ""; element.className = "hidden"; }
+    function showPanel(panel) {
+      $("loginPanel").classList.toggle("hidden", panel !== "login");
+      $("signupPanel").classList.toggle("hidden", panel !== "signup");
+      clearNotice($("authNotice"));
+    }
+    function showSection(section) {
+      ["welcomeCard", "createCard", "aboutCard"].forEach(id => $(id).classList.add("hidden"));
+      if (section === "create") {
+        if (!currentUser()) { $("authCard").scrollIntoView({behavior:"smooth"}); showNotice($("authNotice"), "پوسٹ کرنے کے لیے پہلے Login کریں یا Sign Up کریں۔", true); return; }
+        $("createCard").classList.remove("hidden");
+      } else if (section === "about") {
+        $("aboutCard").classList.remove("hidden");
+      } else if (currentUser()) {
+        $("welcomeCard").classList.remove("hidden");
+      }
+    }
+    async function hashPassword(password) {
+      if (window.crypto && crypto.subtle && window.TextEncoder) {
+        const bytes = new TextEncoder().encode(password);
+        const digest = await crypto.subtle.digest("SHA-256", bytes);
+        return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2,"0")).join("");
+      }
+      // Local demo fallback only. Do not use this approach for production authentication.
+      return "demo-" + btoa(unescape(encodeURIComponent(password)));
+    }
 
-try {
-  posts = JSON.parse(
-    localStorage.getItem("socialHubPosts") || "[]"
-  );
-  if (!Array.isArray(posts)) posts = [];
-} catch (e) {
-  posts = [];
-}
+    $("showSignup").addEventListener("click", () => showPanel("signup"));
+    $("showLogin").addEventListener("click", () => showPanel("login"));
 
-function savePosts() {
-  localStorage.setItem(
-    "socialHubPosts",
-    JSON.stringify(posts)
-  );
-}
+    $("signupForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const name = $("signupName").value.trim();
+      const email = $("signupEmail").value.trim().toLowerCase();
+      const password = $("signupPassword").value;
+      const confirm = $("signupConfirm").value;
+      const notice = $("authNotice");
+      if (name.length < 2) return showNotice(notice, "براہِ کرم اپنا درست نام لکھیں۔", true);
+      if (password.length < 6) return showNotice(notice, "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے۔", true);
+      if (password !== confirm) return showNotice(notice, "دونوں پاس ورڈ ایک جیسے نہیں ہیں۔", true);
+      const users = getUsers();
+      if (users.some(u => u.email === email)) return showNotice(notice, "اس ای میل سے اکاؤنٹ پہلے سے موجود ہے۔ Login کریں۔", true);
+      try {
+        const passwordHash = await hashPassword(password);
+        users.push({ name, email, passwordHash, createdAt: new Date().toISOString() });
+        saveStore(USERS_KEY, users);
+        localStorage.setItem(SESSION_KEY, email);
+        $("signupForm").reset();
+        updateUI();
+        showNotice(notice, "اکاؤنٹ بن گیا! آپ Login ہو گئے ہیں۔");
+      } catch (err) {
+        showNotice(notice, "اکاؤنٹ محفوظ نہیں ہو سکا۔ براہِ کرم دوبارہ کوشش کریں۔", true);
+      }
+    });
 
-function addPost() {
-  const authorInput = document.getElementById("author");
-  const messageInput = document.getElementById("message");
+    $("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const email = $("loginEmail").value.trim().toLowerCase();
+      const password = $("loginPassword").value;
+      const user = getUsers().find(u => u.email === email);
+      const notice = $("authNotice");
+      if (!user) return showNotice(notice, "یہ اکاؤنٹ نہیں ملا۔ پہلے Sign Up کریں۔", true);
+      try {
+        const hash = await hashPassword(password);
+        if (hash !== user.passwordHash) return showNotice(notice, "ای میل یا پاس ورڈ درست نہیں ہے۔", true);
+        localStorage.setItem(SESSION_KEY, email);
+        $("loginForm").reset();
+        updateUI();
+        showNotice(notice, "Login کامیاب ہو گیا!");
+      } catch (err) {
+        showNotice(notice, "Login نہیں ہو سکا۔ دوبارہ کوشش کریں۔", true);
+      }
+    });
 
-  const author = authorInput.value.trim() || "Guest";
-  const message = messageInput.value.trim();
+    $("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem(SESSION_KEY);
+      updateUI();
+      showPanel("login");
+      showNotice($("authNotice"), "آپ Logout ہو گئے ہیں۔");
+    });
 
-  if (!message) {
-    alert("Please write something first!");
-    return;
-  }
+    $("postForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const user = currentUser();
+      if (!user) return showNotice($("postNotice"), "پوسٹ کرنے کے لیے Login کریں۔", true);
+      const content = $("postContent").value.trim();
+      if (!content) return showNotice($("postNotice"), "پوسٹ خالی نہیں ہو سکتی۔", true);
+      const posts = getPosts();
+      posts.unshift({
+        id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()),
+        author: user.name,
+        email: user.email,
+        content,
+        createdAt: new Date().toISOString()
+      });
+      saveStore(POSTS_KEY, posts);
+      $("postForm").reset();
+      showNotice($("postNotice"), "آپ کی پوسٹ شائع ہو گئی!");
+      renderPosts();
+    });
 
-  posts.unshift({
-    id: Date.now(),
-    author: author,
-    message: message,
-    likes: 0
-  });
+    $("homeLink").addEventListener("click", e => { e.preventDefault(); showSection("home"); window.scrollTo({top:0,behavior:"smooth"}); });
+    $("createLink").addEventListener("click", e => { e.preventDefault(); showSection("create"); });
+    $("goCreateBtn").addEventListener("click", () => showSection("create"));
+    $("aboutLink").addEventListener("click", e => { e.preventDefault(); showSection("about"); });
+    $("searchInput").addEventListener("input", renderPosts);
 
-  savePosts();
-  messageInput.value = "";
-  showPosts();
-}
+    function renderPosts() {
+      const list = $("postsList");
+      const query = $("searchInput").value.trim().toLowerCase();
+      const posts = getPosts().filter(post =>
+        (post.content || "").toLowerCase().includes(query) ||
+        (post.author || "").toLowerCase().includes(query)
+      );
+      list.replaceChildren();
+      if (!posts.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = query ? "آپ کی تلاش سے ملتی جلتی کوئی پوسٹ نہیں ملی۔" : "ابھی کوئی پوسٹ نہیں ہے۔";
+        list.appendChild(empty);
+        return;
+      }
+      posts.forEach(post => {
+        const article = document.createElement("article");
+        article.className = "post";
+        const head = document.createElement("div");
+        head.className = "post-head";
+        const author = document.createElement("span");
+        author.className = "post-name";
+        author.textContent = post.author || "Unknown";
+        const date = document.createElement("span");
+        date.className = "post-date";
+        const parsed = new Date(post.createdAt);
+        date.textContent = Number.isNaN(parsed.getTime()) ? "" : parsed.toLocaleString();
+        head.append(author, date);
+        const content = document.createElement("div");
+        content.className = "post-content";
+        content.textContent = post.content || "";
+        article.append(head, content);
+        const user = currentUser();
+        if (user && user.email === post.email) {
+          const remove = document.createElement("button");
+          remove.className = "btn danger";
+          remove.type = "button";
+          remove.style.marginTop = "12px";
+          remove.textContent = "Delete Post";
+          remove.addEventListener("click", () => {
+            if (!confirm("کیا آپ یہ پوسٹ حذف کرنا چاہتے ہیں؟")) return;
+            saveStore(POSTS_KEY, getPosts().filter(p => p.id !== post.id));
+            renderPosts();
+          });
+          article.appendChild(remove);
+        }
+        list.appendChild(article);
+      });
+    }
 
-function likePost(id) {
-  const post = posts.find(p => p.id === id);
-  if (!post) return;
+    function updateUI() {
+      const user = currentUser();
+      $("authCard").classList.toggle("hidden", !!user);
+      $("logoutBtn").classList.toggle("hidden", !user);
+      $("navUser").textContent = user ? "👤 " + user.name : "";
+      $("welcomeTitle").textContent = user ? "Welcome, " + user.name + "!" : "Welcome!";
+      if (user) showSection("home");
+      else { $("welcomeCard").classList.add("hidden"); $("createCard").classList.add("hidden"); }
+      renderPosts();
+    }
 
-  post.likes++;
-  savePosts();
-  showPosts();
-}
-
-function deletePost(id) {
-  if (!confirm("Delete this post?")) return;
-
-  posts = posts.filter(p => p.id !== id);
-  savePosts();
-  showPosts();
-}
-
-function showPosts() {
-  const list = document.getElementById("posts");
-  const query = document.getElementById("search")
-    .value.toLowerCase();
-
-  list.innerHTML = "";
-
-  const filtered = posts.filter(p =>
-    p.author.toLowerCase().includes(query) ||
-    p.message.toLowerCase().includes(query)
-  );
-
-  if (filtered.length === 0) {
-    list.innerHTML =
-      '<div class="card">No posts yet. Create your first post!</div>';
-    return;
-  }
-
-  filtered.forEach(post => {
-    const card = document.createElement("article");
-    card.className = "card post";
-
-    const heading = document.createElement("h3");
-    heading.textContent = "👤 " + post.author;
-
-    const text = document.createElement("p");
-    text.textContent = post.message;
-
-    const count = document.createElement("p");
-    count.className = "small";
-    count.textContent = "❤️ " + post.likes + " Likes";
-
-    const actions = document.createElement("div");
-    actions.className = "actions";
-
-    const like = document.createElement("button");
-    like.textContent = "❤️ Like";
-    like.onclick = () => likePost(post.id);
-
-    const remove = document.createElement("button");
-    remove.textContent = "🗑️ Delete";
-    remove.style.background = "#d93025";
-    remove.onclick = () => deletePost(post.id);
-
-    actions.append(like, remove);
-    card.append(heading, text, count, actions);
-    list.appendChild(card);
-  });
-}
-
-showPosts();
-</script>
-
+    updateUI();
+  </script>
 </body>
-</html>
+</html>'''
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created {path} ({path.stat().st_size} bytes)")
