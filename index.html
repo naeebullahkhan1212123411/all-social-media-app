@@ -1,228 +1,464 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
-<html lang="ur">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Social Hub</title>
 <style>
-:root{--brand:#08a6b5;--brand2:#087fbe;--bg:#f3f6f8;--card:#fff;--text:#18212b;--muted:#667085;--line:#e4e9ee;--danger:#d92d20}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Nastaliq Urdu",sans-serif;background:var(--bg);color:var(--text)}
-button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
-.top{background:linear-gradient(120deg,#087fbe,#08b5b0);color:#fff;padding:22px 16px 18px;text-align:center}
-.top h1{margin:0 0 7px;font-size:clamp(25px,5vw,38px)}.top p{margin:0 0 16px}.top input{width:min(680px,100%);padding:13px 16px;border:0;border-radius:30px;outline:none}
-.nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;background:#fff;padding:10px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0000000b}
-.nav button{background:#f0f5f7;color:#263746}.nav button.active,.primary{background:var(--brand2);color:#fff}
-.wrap{max-width:850px;margin:22px auto;padding:0 13px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:16px;box-shadow:0 4px 18px #14212b08}
-h2{font-size:22px;margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.avatar{width:42px;height:42px;border-radius:50%;background:#d8f4f5;color:#087f89;display:grid;place-items:center;font-weight:bold;flex-shrink:0}
-.field{display:block;width:100%;padding:12px;border:1px solid #d5dde4;border-radius:10px;margin:9px 0;outline-color:var(--brand)}textarea.field{min-height:95px;resize:vertical}
-.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions button{background:#f0f5f7;color:#344054}.actions button.liked{background:#ffe8ec;color:#c11545}.actions button.primary{background:var(--brand2);color:white}
-.video{width:100%;max-height:480px;background:#101820;border-radius:12px;margin-top:12px}.post-image{width:100%;max-height:460px;object-fit:contain;background:#f2f4f7;border-radius:12px;margin-top:12px}
-.small-btn{padding:7px 10px;font-size:13px}.hidden{display:none!important}.empty{text-align:center;padding:30px 10px;color:var(--muted)}
-footer{text-align:center;color:var(--muted);padding:24px 10px;font-size:13px}
-.pill{background:#e7f8fa;color:#087f89;padding:5px 9px;border-radius:30px;font-size:12px;font-weight:bold}
-.auth{max-width:500px;margin:25px auto}.notice{background:#fff7e6;border:1px solid #f5d38a;color:#7a4b00;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin-bottom:15px}
-.comment{background:#f5f7f9;border-radius:9px;padding:9px 11px;margin-top:8px;font-size:14px;overflow-wrap:anywhere}
-hr{border:0;border-top:1px solid var(--line);margin:15px 0}
-@media(max-width:520px){.card{padding:14px}.nav{gap:5px}.nav button{padding:9px 10px;font-size:13px}.actions button{flex:1}}
+:root {
+  --primary:#079bb2;
+  --bg:#f3f7f8;
+  --card:#fff;
+  --text:#20313a;
+  --muted:#687780;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header {
+  background:linear-gradient(120deg,#0788b5,#08b99c);
+  color:white;
+  padding:28px 16px 24px;
+  text-align:center;
+}
+header h1 { margin:0; font-size:clamp(27px,5vw,42px); }
+header p { margin:8px 0 18px; }
+.search {
+  width:min(760px,100%);
+  padding:14px 18px;
+  border:0;
+  border-radius:28px;
+  font-size:16px;
+}
+nav {
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+  padding:12px;
+  background:white;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+button {
+  border:0;
+  border-radius:10px;
+  padding:11px 14px;
+  background:var(--primary);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+}
+.navbtn { background:#edf5f6; color:#24424a; }
+.navbtn.active { background:var(--primary); color:white; }
+.secondary { background:#eaf2f4; color:#23434c; }
+.danger { background:#d94b4b; }
+main { max-width:1000px; margin:22px auto; padding:0 14px 35px; }
+.panel,.post,.video-card {
+  background:var(--card);
+  border-radius:17px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 4px 20px #173c4810;
+}
+h2 { margin:0 0 14px; }
+.muted { color:var(--muted); font-size:14px; }
+label { display:block; font-size:14px; font-weight:bold; margin:12px 0 6px; }
+input,textarea,select {
+  width:100%;
+  padding:12px;
+  border:1px solid #d5e1e5;
+  border-radius:10px;
+  font:inherit;
+  background:white;
+  color:#20313a;
+}
+textarea { min-height:105px; resize:vertical; }
+.actions,.post-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.hidden { display:none!important; }
+.post-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.avatar {
+  width:42px;height:42px;border-radius:50%;
+  background:#d9f3f3;display:grid;place-items:center;
+  font-weight:bold;color:#087c8d;overflow:hidden;flex-shrink:0;
+}
+.avatar img { width:100%;height:100%;object-fit:cover; }
+.post-media { max-width:100%;max-height:500px;display:block;margin:12px auto;border-radius:12px; }
+.post-text { white-space:pre-wrap;line-height:1.5; }
+.post-actions { border-top:1px solid #e2eaed;padding-top:12px; }
+.comment-item { padding:7px 0;border-bottom:1px solid #e2eaed;font-size:14px; }
+.embed-wrap {
+  position:relative;width:100%;max-width:560px;
+  margin:12px auto;aspect-ratio:9/16;
+  background:#101820;border-radius:12px;overflow:hidden;
+}
+.embed-wrap iframe { width:100%;height:100%;border:0; }
+.embed-wrap.landscape { aspect-ratio:16/9; }
+.platform {
+  display:inline-block;background:#e5f8f7;color:#087c80;
+  padding:5px 9px;border-radius:20px;font-size:12px;
+}
+.notice { padding:12px;border-radius:10px;background:#fff7dd;color:#725817;font-size:13px;line-height:1.5; }
+footer { text-align:center;color:var(--muted);padding:20px;font-size:13px; }
+@media(max-width:520px) {
+  header { padding:22px 12px; }
+  .navbtn { padding:10px;font-size:12px; }
+  .panel,.post { padding:15px; }
+}
 </style>
 </head>
 <body>
-<header class="top">
+<header>
   <h1>🌐 My Social Hub</h1>
   <p>Share your world with everyone!</p>
-  <input id="searchBox" type="search" placeholder="Search posts or people..." aria-label="Search posts or people">
+  <input id="searchBox" class="search" placeholder="Search posts or people...">
 </header>
-<nav class="nav" id="mainNav">
-  <button class="active" data-page="home">🏠 Home</button>
-  <button data-page="videos">🎬 Videos</button>
-  <button data-page="create">✍️ Create Post</button>
-  <button data-page="profile">👤 Profile</button>
-  <button data-page="about">ℹ️ About</button>
-  <button id="authNav" data-page="auth">🔐 Login / Sign Up</button>
-  <button id="logoutBtn" class="hidden">Logout</button>
+
+<nav>
+  <button class="navbtn active" data-page="home">🏠 Home</button>
+  <button class="navbtn" data-page="videos">🎬 Videos</button>
+  <button class="navbtn" data-page="create">✍️ Create Post</button>
+  <button class="navbtn" data-page="profile">👤 Profile</button>
+  <button class="navbtn" data-page="settings">⚙️ Settings</button>
+  <button class="navbtn" data-page="about">ℹ️ About</button>
+  <button class="navbtn" data-page="auth" id="authNav">🔐 Login / Sign Up</button>
 </nav>
-<main class="wrap">
-  <section id="welcome" class="card">
-    <h2 id="welcomeTitle">Welcome to My Social Hub!</h2>
+
+<main>
+<section id="homePage">
+  <div class="panel">
+    <h2>Welcome to My Social Hub!</h2>
     <p class="muted">Share text, photos and video links with your community.</p>
-    <button class="primary" onclick="openPage('create')">✍️ Create Post</button>
-  </section>
-
-  <section id="page-home">
-    <div class="card"><div class="row between"><h2>Recent Posts</h2><span class="pill" id="postCount">0 posts</span></div><div id="feed"></div></div>
-  </section>
-
-  <section id="page-videos" class="hidden">
-    <div class="card"><h2>🎬 Video Feed</h2><p class="muted">Posts with a direct video URL or supported embed link appear here.</p><div id="videoFeed"></div></div>
-  </section>
-
-  <section id="page-create" class="hidden">
-    <div class="card">
-      <h2>✍️ Create a Post</h2>
-      <p class="muted">Text, image URL, or a video URL/embed link share karein.</p>
-      <textarea id="postText" class="field" placeholder="What's on your mind?"></textarea>
-      <input id="mediaUrl" class="field" type="url" placeholder="Image or video URL (optional)">
-      <select id="mediaType" class="field" aria-label="Media type">
-        <option value="auto">Detect automatically</option><option value="video">Video URL</option><option value="image">Image URL</option><option value="youtube">YouTube link</option>
-      </select>
-      <button id="publishBtn" class="primary">Publish Post</button>
-      <p class="muted">Tip: video links should be publicly accessible. Uploading a file to all users requires a backend/storage service.</p>
+    <div class="actions">
+      <button onclick="showPage('create')">✍️ Create Post</button>
+      <button class="secondary" onclick="showPage('videos')">▶ Explore Videos</button>
     </div>
-  </section>
+  </div>
+  <div class="panel">
+    <h2>Recent Posts <span class="muted" id="postCount"></span></h2>
+    <div id="feed"></div>
+  </div>
+</section>
 
-  <section id="page-profile" class="hidden">
-    <div class="card"><h2>👤 My Profile</h2><div id="profileContent"></div></div>
-  </section>
+<section id="videosPage" class="hidden">
+  <div class="panel">
+    <h2>🎬 Watch Videos</h2>
+    <p class="muted">Paste a public video link from YouTube, TikTok, Facebook or Instagram.</p>
+    <label for="videoUrl">Video link</label>
+    <input id="videoUrl" type="url" placeholder="Paste video URL">
+    <label for="videoPlatform">Platform</label>
+    <select id="videoPlatform">
+      <option>YouTube</option><option>TikTok</option>
+      <option>Facebook</option><option>Instagram</option><option>Other</option>
+    </select>
+    <label for="videoCaption">Caption</label>
+    <input id="videoCaption" placeholder="Write a caption">
+    <div class="actions"><button onclick="addVideo()">▶ Add Video</button></div>
+  </div>
+  <div id="videoList"></div>
+</section>
 
-  <section id="page-about" class="hidden">
-    <div class="card"><h2>About My Social Hub</h2><p>My Social Hub is a simple social feed demo for sharing posts, video links, likes, comments and profiles.</p><p class="muted">This starter version stores demo data in this browser only. It is not connected to a shared online database.</p></div>
-  </section>
+<section id="createPage" class="hidden">
+  <div class="panel">
+    <h2>✍️ Create a Post</h2>
+    <p class="muted" id="createAs">Share an update.</p>
+    <label for="postText">What is on your mind?</label>
+    <textarea id="postText" placeholder="Write something..."></textarea>
+    <label for="postFile">Add a photo or video</label>
+    <input id="postFile" type="file" accept="image/*,video/*">
+    <label for="postLink">Or add a video link</label>
+    <input id="postLink" type="url" placeholder="Paste video link">
+    <div class="actions"><button onclick="createPost()">Publish Post</button></div>
+    <p class="notice">Demo: uploaded media stays in this browser. Online sharing requires a backend and storage service.</p>
+  </div>
+</section>
 
-  <section id="page-auth" class="hidden">
-    <div class="auth card">
-      <h2 id="authTitle">Create Account / Sign Up</h2>
-      <div class="notice">Demo version: account information is stored only in this browser. Do not use a real password. For a public website, connect a secure authentication service such as Firebase.</div>
-      <form id="authForm">
-        <input id="authName" class="field" placeholder="Your full name" autocomplete="name">
-        <input id="authEmail" class="field" type="email" placeholder="Email address" autocomplete="email" required>
-        <input id="authPassword" class="field" type="password" placeholder="Password (at least 6 characters)" minlength="6" autocomplete="current-password" required>
-        <button class="primary" id="authSubmit" type="submit">Create Account</button>
-      </form>
-      <p id="authSwitchText" class="muted">Already have an account? <a href="#" id="switchAuth">Login</a></p>
-      <p id="authMessage" role="status"></p>
+<section id="profilePage" class="hidden">
+  <div class="panel">
+    <h2>👤 My Profile</h2>
+    <div class="post-head">
+      <div class="avatar" id="profileAvatar">?</div>
+      <div><h3 id="profileName">Guest</h3><p class="muted" id="profileEmail">Not logged in</p></div>
     </div>
-  </section>
+    <label for="profileDisplayName">Display name</label>
+    <input id="profileDisplayName" placeholder="Your name">
+    <label for="profileBio">Bio</label>
+    <textarea id="profileBio" placeholder="About you..."></textarea>
+    <label for="profilePhoto">Profile photo</label>
+    <input id="profilePhoto" type="file" accept="image/*">
+    <div class="actions"><button onclick="saveProfile()">Save Profile</button></div>
+    <hr><h3>My Posts</h3><div id="myPosts"></div>
+  </div>
+</section>
+
+<section id="settingsPage" class="hidden">
+  <div class="panel">
+    <h2>⚙️ Settings</h2>
+    <label for="themeSelect">Theme</label>
+    <select id="themeSelect" onchange="applyTheme()">
+      <option value="light">Light</option><option value="dark">Dark</option>
+    </select>
+    <label><input id="privateMode" type="checkbox" style="width:auto"> Private demo profile</label>
+    <label><input id="notifyMode" type="checkbox" style="width:auto"> Demo notifications</label>
+    <div class="actions">
+      <button onclick="saveSettings()">Save Settings</button>
+      <button class="secondary" onclick="exportData()">Export Data</button>
+      <button class="danger" onclick="clearDemoData()">Clear Data</button>
+    </div>
+    <p class="notice">These are local demo settings, not real platform-wide privacy controls.</p>
+  </div>
+</section>
+
+<section id="aboutPage" class="hidden">
+  <div class="panel">
+    <h2>ℹ️ About My Social Hub</h2>
+    <p>My Social Hub is a social website demo for posts, profiles and video links.</p>
+    <p class="notice">Real accounts, secure login, shared online posts and uploads require a backend.</p>
+  </div>
+</section>
+
+<section id="authPage" class="hidden">
+  <div class="panel">
+    <h2>🔐 Login / Sign Up</h2>
+    <div class="grid">
+      <div>
+        <h3>Create Account (Demo)</h3>
+        <label for="signupName">Name</label><input id="signupName" placeholder="Your name">
+        <label for="signupEmail">Email</label><input id="signupEmail" type="email" placeholder="you@example.com">
+        <label for="signupPassword">Password</label><input id="signupPassword" type="password" placeholder="At least 6 characters">
+        <div class="actions"><button onclick="signup()">Sign Up</button></div>
+      </div>
+      <div>
+        <h3>Login (Demo)</h3>
+        <label for="loginEmail">Email</label><input id="loginEmail" type="email" placeholder="Email">
+        <label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="Password">
+        <div class="actions">
+          <button onclick="login()">Login</button>
+          <button class="secondary" onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+    <p id="authMessage" class="muted"></p>
+    <p class="notice">Warning: this demo stores account details in your browser and is not secure authentication. Never use a password you use elsewhere.</p>
+  </div>
+</section>
 </main>
+
 <footer>My Social Hub · Demo version</footer>
+
 <script>
 const $ = id => document.getElementById(id);
-const USERS_KEY='msh_demo_users_v1', SESSION_KEY='msh_demo_session_v1', POSTS_KEY='msh_demo_posts_v1';
-let authMode='signup';
-let users=read(USERS_KEY,[]);
-let posts=read(POSTS_KEY,[]);
-let currentUser=read(SESSION_KEY,null);
-function read(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v===null?fallback:v}catch{return fallback}}
-function save(){localStorage.setItem(USERS_KEY,JSON.stringify(users));localStorage.setItem(POSTS_KEY,JSON.stringify(posts));localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser))}
-function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function safeUrl(s=''){try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
-function userName(){return currentUser?.name||'Guest'}
-function openPage(page){
-  ['home','videos','create','profile','about','auth'].forEach(p=>$('page-'+p).classList.toggle('hidden',p!==page));
-  document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
-  if(page==='create'&&!currentUser){openPage('auth');$('authMessage').textContent='Post karne ke liye pehle demo login karein.';return}
-  if(page==='profile')renderProfile();
-  if(page==='videos')renderVideos();
-  window.scrollTo({top:0,behavior:'smooth'});
+const KEYS = {
+ posts:'msh_posts_v1', videos:'msh_videos_v1',
+ profile:'msh_profile_v1', accounts:'msh_demo_accounts_v1',
+ session:'msh_demo_session_v1', settings:'msh_settings_v1'
+};
+function read(key,fallback) {
+ try { const v=localStorage.getItem(key); return v?JSON.parse(v):fallback; }
+ catch(e) { return fallback; }
 }
-document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
-$('logoutBtn').addEventListener('click',()=>{currentUser=null;save();updateHeader();openPage('home')});
-function updateHeader(){
-  $('welcomeTitle').textContent=currentUser?`Welcome, ${currentUser.name}!`:'Welcome to My Social Hub!';
-  $('authNav').textContent=currentUser?'👤 Account':'🔐 Login / Sign Up';
-  $('authNav').dataset.page=currentUser?'profile':'auth';
-  $('logoutBtn').classList.toggle('hidden',!currentUser);
+function write(key,value) {
+ try { localStorage.setItem(key,JSON.stringify(value)); return true; }
+ catch(e) { alert('Storage full. Try a smaller file.'); return false; }
 }
-$('switchAuth').addEventListener('click',e=>{e.preventDefault();authMode=authMode==='signup'?'login':'signup';setAuthMode()});
-function setAuthMode(){
-  $('authTitle').textContent=authMode==='signup'?'Create Account / Sign Up':'Login to My Social Hub';
-  $('authName').classList.toggle('hidden',authMode==='login');$('authName').required=authMode==='signup';
-  $('authSubmit').textContent=authMode==='signup'?'Create Account':'Login';
-  $('authSwitchText').innerHTML=authMode==='signup'?'Already have an account? <a href="#" id="switchAuth">Login</a>':'New here? <a href="#" id="switchAuth">Create account</a>';
-  $('switchAuth').addEventListener('click',e=>{e.preventDefault();authMode=authMode==='signup'?'login':'signup';setAuthMode()});
-  $('authMessage').textContent='';
+let posts=read(KEYS.posts,[]);
+let videos=read(KEYS.videos,[]);
+let profile=read(KEYS.profile,{name:'Guest',email:'',bio:'',photo:''});
+let accounts=read(KEYS.accounts,[]);
+let session=read(KEYS.session,null);
+let settings=read(KEYS.settings,{theme:'light',privateMode:false,notifyMode:false});
+
+function currentName(){return session?.name||profile.name||'Guest';}
+function escapeHTML(s='') {
+ return String(s).replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ }[c]));
 }
-$('authForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const email=$('authEmail').value.trim().toLowerCase(), password=$('authPassword').value, name=$('authName').value.trim();
-  if(password.length<6){$('authMessage').textContent='Password must be at least 6 characters.';return}
-  if(authMode==='signup'){
-    if(!name){$('authMessage').textContent='Please enter your name.';return}
-    if(users.some(u=>u.email===email)){$('authMessage').textContent='This email is already registered in this browser. Please login.';return}
-    users.push({name,email,password});currentUser={name,email};save();updateHeader();$('authMessage').textContent='Demo account created successfully!';openPage('home');
-  }else{
-    const u=users.find(u=>u.email===email&&u.password===password);
-    if(!u){$('authMessage').textContent='Email/password not found in this browser. Sign up first.';return}
-    currentUser={name:u.name,email:u.email};save();updateHeader();openPage('home');
+function safeLink(url) {
+ try { let u=new URL(url); return ['http:','https:'].includes(u.protocol)?u.href:''; }
+ catch(e) { return ''; }
+}
+function avatarHTML(name,photo) {
+ return photo?`<img src="${photo}" alt="">`:escapeHTML((name||'?').trim().charAt(0).toUpperCase()||'?');
+}
+function showPage(page) {
+ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
+ $(page+'Page').classList.remove('hidden');
+ document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ if(page==='profile')renderProfile();
+ if(page==='home')renderFeed();
+ if(page==='videos')renderVideos();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+$('searchBox').addEventListener('input',renderFeed);
+
+function renderFeed() {
+ const q=$('searchBox').value.trim().toLowerCase();
+ const list=posts.filter(p=>(p.text+' '+p.name+' '+(p.link||'')).toLowerCase().includes(q));
+ $('postCount').textContent=`(${list.length} posts)`;
+ $('feed').innerHTML=list.length?list.slice().reverse().map(postHTML).join(''):'<p class="muted">No posts yet. Be the first!</p>';
+}
+function postHTML(p) {
+ let media='';
+ if(p.media&&p.mediaType==='image')media=`<img class="post-media" src="${p.media}" alt="Post image">`;
+ if(p.media&&p.mediaType==='video')media=`<video class="post-media" controls playsinline src="${p.media}"></video>`;
+ if(p.link)media+=videoEmbed(p.link,p.platform||'');
+ return `<article class="post">
+ <div class="post-head"><div class="avatar">${avatarHTML(p.name,p.photo)}</div>
+ <div><strong>${escapeHTML(p.name||'Guest')}</strong><div class="muted">${escapeHTML(p.date||'')}</div></div></div>
+ ${p.text?`<div class="post-text">${escapeHTML(p.text)}</div>`:''}${media}
+ <div class="post-actions">
+ <button class="secondary" onclick="likePost('${p.id}')">❤️ Like (${p.likes||0})</button>
+ <button class="secondary" onclick="commentPost('${p.id}')">💬 Comment (${(p.comments||[]).length})</button>
+ <button class="secondary" onclick="sharePost('${p.id}')">🔗 Share</button>
+ ${p.email&&session&&p.email===session.email?`<button class="danger" onclick="deletePost('${p.id}')">Delete</button>`:''}
+ </div>
+ <div class="comment-list">${(p.comments||[]).map(c=>`<div class="comment-item"><strong>${escapeHTML(c.name)}:</strong> ${escapeHTML(c.text)}</div>`).join('')}</div>
+ </article>`;
+}
+function createPost() {
+ const text=$('postText').value.trim(),link=safeLink($('postLink').value.trim()),file=$('postFile').files[0];
+ if(!text&&!link&&!file){alert('Write a post, add a link, or choose a file.');return;}
+ const add=media=>{
+  posts.push({id:String(Date.now())+Math.random().toString(16).slice(2),
+   name:currentName(),email:session?.email||'',photo:profile.photo||'',text,link,
+   platform:detectPlatform(link),media:media?.data||'',mediaType:media?.type||'',
+   date:new Date().toLocaleString(),likes:0,comments:[]});
+  if(write(KEYS.posts,posts)){
+   $('postText').value='';$('postLink').value='';$('postFile').value='';showPage('home');
   }
-});
-function detectType(url,chosen){
-  if(chosen!=='auto')return chosen;
-  if(/youtube\.com|youtu\.be/i.test(url))return 'youtube';
-  if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(url))return 'video';
-  if(/\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url))return 'image';
-  return url?'link':'text';
+ };
+ if(file) {
+  const r=new FileReader();
+  r.onload=()=>add({data:r.result,type:file.type.startsWith('image/')?'image':file.type.startsWith('video/')?'video':''});
+  r.readAsDataURL(file);
+ } else add(null);
 }
-function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1);if(u.searchParams.get('v'))return u.searchParams.get('v');const m=u.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/);return m?m[1]:''}catch{return ''}}
-$('publishBtn').addEventListener('click',()=>{
-  if(!currentUser){openPage('auth');$('authMessage').textContent='Post publish karne ke liye login karein.';return}
-  const text=$('postText').value.trim(), raw=$('mediaUrl').value.trim(), url=safeUrl(raw), type=detectType(raw,$('mediaType').value);
-  if(!text&&!url){alert('Please write something or add a valid media URL.');return}
-  if(raw&&!url){alert('Please enter a valid URL starting with https://');return}
-  posts.unshift({id:Date.now().toString()+Math.random().toString(16).slice(2),name:currentUser.name,email:currentUser.email,text,url,type,likes:[],comments:[],date:new Date().toISOString()});
-  save();$('postText').value='';$('mediaUrl').value='';$('mediaType').value='auto';renderFeed();openPage('home');
-});
-function mediaHtml(p){
-  const url=safeUrl(p.url||'');if(!url)return '';
-  if(p.type==='video')return `<video class="video" controls preload="metadata" src="${escapeHtml(url)}"></video>`;
-  if(p.type==='image')return `<img class="post-image" src="${escapeHtml(url)}" alt="Shared image" loading="lazy" onerror="this.style.display='none'">`;
-  if(p.type==='youtube'){const id=youtubeId(url);return id?`<iframe class="video" height="315" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`:`<a href="${escapeHtml(url)}" target="_blank" rel="noopener">Open video</a>`}
-  if(p.type==='link')return `<p><a href="${escapeHtml(url)}" target="_blank" rel="noopener">Open shared link ↗</a></p>`;
-  return '';
+function likePost(id) {
+ const p=posts.find(p=>p.id===id);
+ if(p){p.likes=(p.likes||0)+1;write(KEYS.posts,posts);renderFeed();renderProfile();}
 }
-function renderPost(p){
-  const liked=currentUser&&p.likes.includes(currentUser.email), comments=(p.comments||[]).map(c=>`<div class="comment"><b>${escapeHtml(c.name)}:</b> ${escapeHtml(c.text)}</div>`).join('');
-  return `<article class="card" data-post="${escapeHtml(p.id)}"><div class="row"><div class="avatar">${escapeHtml((p.name||'?').slice(0,1).toUpperCase())}</div><div><b>${escapeHtml(p.name)}</b><div class="muted">${new Date(p.date).toLocaleString()}</div></div></div>
-  ${p.text?`<p style="white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(p.text)}</p>`:''}${mediaHtml(p)}
-  <div class="actions"><button class="${liked?'liked':''}" data-action="like" data-id="${escapeHtml(p.id)}">❤️ ${liked?'Liked':'Like'} (${p.likes.length})</button><button data-action="comment" data-id="${escapeHtml(p.id)}">💬 Comment (${(p.comments||[]).length})</button><button data-action="share" data-id="${escapeHtml(p.id)}">🔗 Share</button>${currentUser&&currentUser.email===p.email?`<button data-action="delete" data-id="${escapeHtml(p.id)}">🗑️ Delete</button>`:''}</div>
-  <div class="comment-area" id="comments-${escapeHtml(p.id)}">${comments}<div class="row" style="margin-top:9px"><input class="field" style="margin:0" id="comment-input-${escapeHtml(p.id)}" placeholder="Write a comment..." maxlength="500"><button class="primary small-btn" data-action="send-comment" data-id="${escapeHtml(p.id)}">Send</button></div></div></article>`;
+function commentPost(id) {
+ const text=prompt('Write your comment:');
+ if(!text||!text.trim())return;
+ const p=posts.find(p=>p.id===id);
+ if(p){p.comments=p.comments||[];p.comments.push({name:currentName(),text:text.trim()});write(KEYS.posts,posts);renderFeed();renderProfile();}
 }
-function renderFeed(list=posts){
-  $('postCount').textContent=`${list.length} posts`;
-  $('feed').innerHTML=list.length?list.map(renderPost).join(''):'<div class="empty">ابھی کوئی پوسٹ نہیں ہے۔ پہلی پوسٹ آپ بنائیں!</div>';
-  $('videoFeed').innerHTML=posts.filter(p=>['video','youtube'].includes(p.type)).map(renderPost).join('')||'<div class="empty">ابھی کوئی ویڈیو پوسٹ نہیں ہے۔</div>';
+function sharePost(id) {
+ const p=posts.find(p=>p.id===id);if(!p)return;
+ shareText(`${p.name}: ${p.text||p.link||'My Social Hub post'}`);
 }
-function renderVideos(){ $('videoFeed').innerHTML=posts.filter(p=>['video','youtube'].includes(p.type)).map(renderPost).join('')||'<div class="empty">ابھی کوئی ویڈیو پوسٹ نہیں ہے۔</div>'}
-document.body.addEventListener('click',async e=>{
-  const b=e.target.closest('button[data-action]');if(!b)return;
-  const p=posts.find(x=>x.id===b.dataset.id);if(!p)return;
-  const action=b.dataset.action;
-  if(action==='like'){
-    if(!currentUser){openPage('auth');return}
-    p.likes=p.likes||[];p.likes=p.likes.includes(currentUser.email)?p.likes.filter(x=>x!==currentUser.email):[...p.likes,currentUser.email];
-  }else if(action==='send-comment'){
-    if(!currentUser){openPage('auth');return}
-    const input=$('comment-input-'+p.id),text=input.value.trim();if(!text)return;
-    p.comments=p.comments||[];p.comments.push({name:currentUser.name,text});input.value='';
-  }else if(action==='comment'){
-    $('comment-input-'+p.id)?.focus();return;
-  }else if(action==='share'){
-    const shareText=`${p.name} on My Social Hub: ${p.text||p.url||'Post'}`;
-    try{if(navigator.share)await navigator.share({title:'My Social Hub',text:shareText,url:p.url||location.href});else if(navigator.clipboard){await navigator.clipboard.writeText(shareText);alert('Post text copied. You can paste it to share.')}else prompt('Copy this post:',shareText)}catch(err){}
-    return;
-  }else if(action==='delete'){
-    if(!currentUser||currentUser.email!==p.email)return;
-    if(!confirm('Delete this post?'))return;posts=posts.filter(x=>x.id!==p.id);
+function shareText(text) {
+ if(navigator.share)navigator.share({title:'My Social Hub',text}).catch(()=>{});
+ else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Copied!')).catch(()=>prompt('Copy:',text));
+ else prompt('Copy:',text);
+}
+function deletePost(id) {
+ if(!confirm('Delete this post?'))return;
+ posts=posts.filter(p=>p.id!==id);write(KEYS.posts,posts);renderFeed();renderProfile();
+}
+function detectPlatform(link) {
+ if(!link)return '';
+ if(/youtube\.com|youtu\.be/i.test(link))return 'YouTube';
+ if(/tiktok\.com/i.test(link))return 'TikTok';
+ if(/facebook\.com|fb\.watch/i.test(link))return 'Facebook';
+ if(/instagram\.com/i.test(link))return 'Instagram';
+ return 'Other';
+}
+function videoEmbed(url,platform) {
+ const u=safeLink(url);if(!u)return '';
+ let src='',landscape=false;
+ try {
+  const x=new URL(u),host=x.hostname.toLowerCase();
+  if(host.includes('youtube.com')||host.includes('youtu.be')) {
+   let id=x.searchParams.get('v');
+   if(host.includes('youtu.be'))id=x.pathname.split('/').filter(Boolean)[0];
+   if(x.pathname.includes('/shorts/'))id=x.pathname.split('/shorts/')[1]?.split('/')[0];
+   if(x.pathname.includes('/embed/'))id=x.pathname.split('/embed/')[1]?.split('/')[0];
+   if(id){src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id);landscape=true;}
+  } else if(host.includes('tiktok.com')) {
+   const m=x.pathname.match(/\/video\/(\d+)/);
+   if(m)src='https://www.tiktok.com/embed/v2/'+m[1];
+  } else if(host.includes('instagram.com')&&/\/(p|reel|tv)\//.test(x.pathname)) {
+   src=x.origin+x.pathname.replace(/\/?$/,'/')+'embed/';
   }
-  save();renderFeed();if(!$('page-videos').classList.contains('hidden'))renderVideos();
-});
-$('searchBox').addEventListener('input',()=>{
-  const q=$('searchBox').value.trim().toLowerCase();
-  const filtered=posts.filter(p=>(p.text||'').toLowerCase().includes(q)||(p.name||'').toLowerCase().includes(q));
-  renderFeed(filtered);openPageWithoutScroll('home');
-});
-function openPageWithoutScroll(page){['home','videos','create','profile','about','auth'].forEach(p=>$('page-'+p).classList.toggle('hidden',p!==page));document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page))}
-function renderProfile(){
-  if(!currentUser){$('profileContent').innerHTML='<p>Please login to view your profile.</p><button class="primary" onclick="openPage(\\'auth\\')">Login / Sign Up</button>';return}
-  const mine=posts.filter(p=>p.email===currentUser.email);
-  $('profileContent').innerHTML=`<div class="row"><div class="avatar">${escapeHtml(currentUser.name.slice(0,1).toUpperCase())}</div><div><h2 style="margin:0">${escapeHtml(currentUser.name)}</h2><div class="muted">${escapeHtml(currentUser.email)}</div></div></div><hr><p>${mine.length} posts · ${mine.reduce((n,p)=>n+p.likes.length,0)} likes received</p><div>${mine.map(renderPost).join('')||'<p class="empty">آپ نے ابھی کوئی پوسٹ نہیں بنائی۔</p>'}</div>`;
+ } catch(e) {}
+ if(src)return `<div class="embed-wrap ${landscape?'landscape':''}">
+ <iframe src="${escapeHTML(src)}" title="Embedded video" loading="lazy"
+ allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+ allowfullscreen></iframe></div>
+ <p class="muted"><a href="${escapeHTML(u)}" target="_blank" rel="noopener">Open original video</a></p>`;
+ return `<p><a href="${escapeHTML(u)}" target="_blank" rel="noopener">▶ Open ${escapeHTML(platform||'')} video in a new tab</a></p>`;
 }
-updateHeader();setAuthMode();renderFeed();
-</script>
-</body>
-</html>
-'''
-path = Path("/mnt/data/index.html")
-path.write_text(html, encoding="utf-8")
-print(f"Created {path} ({path.stat().st_size} bytes)")
+function addVideo() {
+ const url=safeLink($('videoUrl').value.trim());
+ if(!url){alert('Enter a valid video link.');return;}
+ videos.push({id:String(Date.now()),url,platform:$('videoPlatform').value,caption:$('videoCaption').value.trim(),name:currentName()});
+ write(KEYS.videos,videos);$('videoUrl').value='';$('videoCaption').value='';renderVideos();
+}
+function renderVideos() {
+ $('videoList').innerHTML=videos.length?videos.slice().reverse().map(v=>`
+ <div class="video-card"><span class="platform">${escapeHTML(v.platform)}</span>
+ <h3>${escapeHTML(v.caption||'Shared video')}</h3>${videoEmbed(v.url,v.platform)}
+ <p class="muted">Shared by ${escapeHTML(v.name)}</p>
+ <button class="secondary" onclick="shareText('${escapeHTML(v.url)}')">🔗 Share</button></div>`).join(''):
+ '<div class="panel muted">No videos yet. Add a public video link above.</div>';
+}
+function renderProfile() {
+ $('profileName').textContent=currentName();
+ $('profileEmail').textContent=session?.email||'Not logged in';
+ $('profileDisplayName').value=profile.name==='Guest'?'':profile.name;
+ $('profileBio').value=profile.bio||'';
+ $('profileAvatar').innerHTML=avatarHTML(currentName(),profile.photo);
+ $('myPosts').innerHTML=posts.filter(p=>p.email&&p.email===session?.email).slice().reverse().map(postHTML).join('')||'<p class="muted">Your posts appear here after login.</p>';
+ $('createAs').textContent='Posting as '+currentName();
+}
+function saveProfile() {
+ profile.name=$('profileDisplayName').value.trim()||currentName();
+ profile.bio=$('profileBio').value.trim();
+ write(KEYS.profile,profile);
+ if(session){session.name=profile.name;write(KEYS.session,session);}
+ updateAuth();renderProfile();alert('Profile saved on this browser.');
+}
+$('profilePhoto').addEventListener('change',e=>{
+ const f=e.target.files[0];if(!f)return;
+ if(!f.type.startsWith('image/')){alert('Choose an image file.');return;}
+ const r=new FileReader();r.onload=()=>{profile.photo=r.result;write(KEYS.profile,profile);renderProfile();};r.readAsDataURL(f);
+});
+function signup() {
+ const name=$('signupName').value.trim(),email=$('signupEmail').value.trim().toLowerCase(),password=$('signupPassword').value;
+ if(!name||!email||password.length<6){$('authMessage').textContent='Enter your name, email, and password of at least 6 characters.';return;}
+ if(accounts.some(a=>a.email===email)){$('authMessage').textContent='Email already exists. Try Login.';return;}
+ accounts.push({name,email,password});
+ if(!write(KEYS.accounts,accounts))return;
+ session={name,email};profile.name=name;profile.email=email;
+ write(KEYS.profile,profile);write(KEYS.session,session);
+ $('authMessage').textContent='Demo account created.';updateAuth();showPage('profile');
+}
+function login() {
+ const email=$('loginEmail').value.trim().toLowerCase(),password=$('loginPassword').value;
+ const a=accounts.find(a=>a.email===email&&a.password===password);
+ if(!a){$('authMessage').textContent='Login failed. Check details or sign up.';return;}
+ session={name:a.name,email:a.email};profile.name=a.name;profile.email=email;
+ write(KEYS.session,session);write(KEYS.profile,profile);
+ $('authMessage').textContent='Logged in on this browser.';updateAuth();showPage('profile');
+}
+function logout() {
+ session=null;write(KEYS.session,null);
+ $('authMessage').textContent='Logged out.';updateAuth();renderProfile();
+}
+function updateAuth() {
+ $('authNav').textContent=session?'👤 '+session.name:'🔐 Login / Sign Up';
+}
+function applyTheme() {
+ const dark=$('themeSelect').value==='dark';
+ document.body.style.setProperty('--bg',dark?'#10191e':'#f3f7f8');
+ document.body.style.setProperty('--card',dark?'#1c2a31':'#fff');
+ document.body.style.setProperty('--text',dark?'#e8f1f3':'#20313a');
+ document
