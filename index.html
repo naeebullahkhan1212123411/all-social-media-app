@@ -3,309 +3,226 @@ from pathlib import Path
 html = r'''<!DOCTYPE html>
 <html lang="ur">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Social Hub</title>
-  <style>
-    :root { --blue:#0788c9; --blue-dark:#066da3; --bg:#f3f6f9; --text:#243342; --muted:#718096; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:Arial, "Noto Nastaliq Urdu", sans-serif; color:var(--text); background:var(--bg); }
-    .hero { padding:32px 16px 26px; text-align:center; color:white; background:linear-gradient(135deg,#0879bd,#05b8d4); }
-    .hero h1 { margin:0 0 8px; font-size:clamp(27px,5vw,42px); }
-    .hero p { margin:0 0 20px; font-size:17px; }
-    .search { width:min(640px,100%); padding:14px 18px; border:0; border-radius:30px; font-size:16px; outline:none; }
-    nav { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px max(16px,calc((100% - 1000px)/2)); background:#fff; box-shadow:0 2px 8px #0000000d; flex-wrap:wrap; }
-    nav a, nav button { color:var(--blue-dark); font-size:16px; font-weight:700; text-decoration:none; border:0; background:none; cursor:pointer; padding:8px; }
-    .wrap { width:min(760px,calc(100% - 28px)); margin:26px auto 50px; }
-    .card { background:#fff; border-radius:16px; padding:24px; margin-bottom:18px; box-shadow:0 5px 22px #1b3b530d; }
-    h2 { margin:0 0 18px; font-size:25px; }
-    .field { display:block; width:100%; padding:13px 14px; margin:10px 0; border:1px solid #d9e1e8; border-radius:9px; font-size:16px; background:white; }
-    textarea.field { min-height:110px; resize:vertical; }
-    .btn { border:0; border-radius:9px; background:var(--blue); color:#fff; padding:12px 18px; font-size:16px; font-weight:700; cursor:pointer; }
-    .btn:hover { background:var(--blue-dark); }
-    .btn.secondary { background:#e8f4fb; color:#086c9e; }
-    .btn.danger { background:#d64545; }
-    .small { color:var(--muted); font-size:14px; line-height:1.5; }
-    .switch { margin-top:15px; }
-    .switch button { color:var(--blue-dark); border:0; background:none; cursor:pointer; font-weight:bold; font-size:15px; }
-    .hidden { display:none !important; }
-    .notice { padding:11px 13px; border-radius:9px; margin:12px 0; background:#e8f7ee; color:#17633a; }
-    .notice.error { background:#fff0f0; color:#a52828; }
-    .post { border:1px solid #e8edf1; padding:17px; border-radius:12px; margin-top:14px; overflow-wrap:anywhere; }
-    .post-head { display:flex; justify-content:space-between; gap:12px; align-items:center; margin-bottom:10px; }
-    .post-name { font-weight:700; }
-    .post-date { color:var(--muted); font-size:12px; }
-    .post-content { white-space:pre-wrap; line-height:1.6; }
-    .empty { text-align:center; padding:24px; color:var(--muted); }
-    footer { text-align:center; color:var(--muted); padding:20px; font-size:13px; }
-    @media(max-width:520px) { .card{padding:18px} nav{justify-content:center} .hero{padding-top:25px} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Social Hub</title>
+<style>
+:root{--brand:#08a6b5;--brand2:#087fbe;--bg:#f3f6f8;--card:#fff;--text:#18212b;--muted:#667085;--line:#e4e9ee;--danger:#d92d20}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Nastaliq Urdu",sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
+.top{background:linear-gradient(120deg,#087fbe,#08b5b0);color:#fff;padding:22px 16px 18px;text-align:center}
+.top h1{margin:0 0 7px;font-size:clamp(25px,5vw,38px)}.top p{margin:0 0 16px}.top input{width:min(680px,100%);padding:13px 16px;border:0;border-radius:30px;outline:none}
+.nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;background:#fff;padding:10px;position:sticky;top:0;z-index:5;box-shadow:0 2px 8px #0000000b}
+.nav button{background:#f0f5f7;color:#263746}.nav button.active,.primary{background:var(--brand2);color:#fff}
+.wrap{max-width:850px;margin:22px auto;padding:0 13px}.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:18px;margin-bottom:16px;box-shadow:0 4px 18px #14212b08}
+h2{font-size:22px;margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.avatar{width:42px;height:42px;border-radius:50%;background:#d8f4f5;color:#087f89;display:grid;place-items:center;font-weight:bold;flex-shrink:0}
+.field{display:block;width:100%;padding:12px;border:1px solid #d5dde4;border-radius:10px;margin:9px 0;outline-color:var(--brand)}textarea.field{min-height:95px;resize:vertical}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.actions button{background:#f0f5f7;color:#344054}.actions button.liked{background:#ffe8ec;color:#c11545}.actions button.primary{background:var(--brand2);color:white}
+.video{width:100%;max-height:480px;background:#101820;border-radius:12px;margin-top:12px}.post-image{width:100%;max-height:460px;object-fit:contain;background:#f2f4f7;border-radius:12px;margin-top:12px}
+.small-btn{padding:7px 10px;font-size:13px}.hidden{display:none!important}.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);padding:24px 10px;font-size:13px}
+.pill{background:#e7f8fa;color:#087f89;padding:5px 9px;border-radius:30px;font-size:12px;font-weight:bold}
+.auth{max-width:500px;margin:25px auto}.notice{background:#fff7e6;border:1px solid #f5d38a;color:#7a4b00;padding:12px;border-radius:10px;font-size:13px;line-height:1.5;margin-bottom:15px}
+.comment{background:#f5f7f9;border-radius:9px;padding:9px 11px;margin-top:8px;font-size:14px;overflow-wrap:anywhere}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+@media(max-width:520px){.card{padding:14px}.nav{gap:5px}.nav button{padding:9px 10px;font-size:13px}.actions button{flex:1}}
+</style>
 </head>
 <body>
-  <header class="hero">
-    <h1>🌐 My Social Hub</h1>
-    <p>Share your world with everyone!</p>
-    <input id="searchInput" class="search" type="search" placeholder="Search posts..." aria-label="Search posts">
-  </header>
+<header class="top">
+  <h1>🌐 My Social Hub</h1>
+  <p>Share your world with everyone!</p>
+  <input id="searchBox" type="search" placeholder="Search posts or people..." aria-label="Search posts or people">
+</header>
+<nav class="nav" id="mainNav">
+  <button class="active" data-page="home">🏠 Home</button>
+  <button data-page="videos">🎬 Videos</button>
+  <button data-page="create">✍️ Create Post</button>
+  <button data-page="profile">👤 Profile</button>
+  <button data-page="about">ℹ️ About</button>
+  <button id="authNav" data-page="auth">🔐 Login / Sign Up</button>
+  <button id="logoutBtn" class="hidden">Logout</button>
+</nav>
+<main class="wrap">
+  <section id="welcome" class="card">
+    <h2 id="welcomeTitle">Welcome to My Social Hub!</h2>
+    <p class="muted">Share text, photos and video links with your community.</p>
+    <button class="primary" onclick="openPage('create')">✍️ Create Post</button>
+  </section>
 
-  <nav>
-    <a href="#" id="homeLink">🏠 Home</a>
-    <a href="#" id="createLink">✍️ Create Post</a>
-    <a href="#" id="aboutLink">ℹ️ About</a>
-    <span id="navUser" class="small"></span>
-    <button id="logoutBtn" class="hidden">Logout</button>
-  </nav>
+  <section id="page-home">
+    <div class="card"><div class="row between"><h2>Recent Posts</h2><span class="pill" id="postCount">0 posts</span></div><div id="feed"></div></div>
+  </section>
 
-  <main class="wrap">
-    <section id="authCard" class="card">
-      <div id="authNotice" class="hidden" role="status"></div>
-      <div id="loginPanel">
-        <h2>Login</h2>
-        <p class="small">اپنے اکاؤنٹ میں داخل ہونے کے لیے ای میل اور پاس ورڈ لکھیں۔</p>
-        <form id="loginForm">
-          <input class="field" id="loginEmail" type="email" placeholder="Email address" autocomplete="email" required>
-          <input class="field" id="loginPassword" type="password" placeholder="Password" autocomplete="current-password" minlength="6" required>
-          <button class="btn" type="submit">Login</button>
-        </form>
-        <p class="switch">اکاؤنٹ نہیں ہے؟ <button id="showSignup" type="button">Sign Up کریں</button></p>
-      </div>
-      <div id="signupPanel" class="hidden">
-        <h2>Create Account / Sign Up</h2>
-        <p class="small">نیا اکاؤنٹ بنانے کے لیے نیچے معلومات درج کریں۔</p>
-        <form id="signupForm">
-          <input class="field" id="signupName" type="text" placeholder="Your full name" autocomplete="name" maxlength="60" required>
-          <input class="field" id="signupEmail" type="email" placeholder="Email address" autocomplete="email" required>
-          <input class="field" id="signupPassword" type="password" placeholder="Create password (at least 6 characters)" autocomplete="new-password" minlength="6" required>
-          <input class="field" id="signupConfirm" type="password" placeholder="Confirm password" autocomplete="new-password" minlength="6" required>
-          <button class="btn" type="submit">Create Account</button>
-        </form>
-        <p class="switch">پہلے سے اکاؤنٹ ہے؟ <button id="showLogin" type="button">Login کریں</button></p>
-      </div>
-      <p class="small">اہم: یہ ایک demo ویب سائٹ ہے۔ اکاؤنٹ اسی browser/device میں محفوظ ہوگا۔</p>
-    </section>
+  <section id="page-videos" class="hidden">
+    <div class="card"><h2>🎬 Video Feed</h2><p class="muted">Posts with a direct video URL or supported embed link appear here.</p><div id="videoFeed"></div></div>
+  </section>
 
-    <section id="welcomeCard" class="card hidden">
-      <h2 id="welcomeTitle">Welcome!</h2>
-      <p>آپ لاگ اِن ہیں۔ اب آپ پوسٹ شائع کر سکتے ہیں۔</p>
-      <button id="goCreateBtn" class="btn">✍️ Create Post</button>
-    </section>
+  <section id="page-create" class="hidden">
+    <div class="card">
+      <h2>✍️ Create a Post</h2>
+      <p class="muted">Text, image URL, or a video URL/embed link share karein.</p>
+      <textarea id="postText" class="field" placeholder="What's on your mind?"></textarea>
+      <input id="mediaUrl" class="field" type="url" placeholder="Image or video URL (optional)">
+      <select id="mediaType" class="field" aria-label="Media type">
+        <option value="auto">Detect automatically</option><option value="video">Video URL</option><option value="image">Image URL</option><option value="youtube">YouTube link</option>
+      </select>
+      <button id="publishBtn" class="primary">Publish Post</button>
+      <p class="muted">Tip: video links should be publicly accessible. Uploading a file to all users requires a backend/storage service.</p>
+    </div>
+  </section>
 
-    <section id="createCard" class="card hidden">
-      <h2>Create a Post</h2>
-      <form id="postForm">
-        <textarea id="postContent" class="field" placeholder="What is on your mind?" maxlength="2000" required></textarea>
-        <button class="btn" type="submit">Publish Post</button>
+  <section id="page-profile" class="hidden">
+    <div class="card"><h2>👤 My Profile</h2><div id="profileContent"></div></div>
+  </section>
+
+  <section id="page-about" class="hidden">
+    <div class="card"><h2>About My Social Hub</h2><p>My Social Hub is a simple social feed demo for sharing posts, video links, likes, comments and profiles.</p><p class="muted">This starter version stores demo data in this browser only. It is not connected to a shared online database.</p></div>
+  </section>
+
+  <section id="page-auth" class="hidden">
+    <div class="auth card">
+      <h2 id="authTitle">Create Account / Sign Up</h2>
+      <div class="notice">Demo version: account information is stored only in this browser. Do not use a real password. For a public website, connect a secure authentication service such as Firebase.</div>
+      <form id="authForm">
+        <input id="authName" class="field" placeholder="Your full name" autocomplete="name">
+        <input id="authEmail" class="field" type="email" placeholder="Email address" autocomplete="email" required>
+        <input id="authPassword" class="field" type="password" placeholder="Password (at least 6 characters)" minlength="6" autocomplete="current-password" required>
+        <button class="primary" id="authSubmit" type="submit">Create Account</button>
       </form>
-      <p class="small">Posts are saved in this browser.</p>
-      <div id="postNotice" class="hidden" role="status"></div>
-    </section>
-
-    <section id="feedCard" class="card">
-      <h2>Recent Posts</h2>
-      <div id="postsList"><p class="empty">ابھی کوئی پوسٹ نہیں ہے۔</p></div>
-    </section>
-
-    <section id="aboutCard" class="card hidden">
-      <h2>About My Social Hub</h2>
-      <p>My Social Hub ایک سادہ social posting demo ہے، جہاں آپ اکاؤنٹ بنا کر پوسٹس شائع کر سکتے ہیں۔</p>
-      <p class="small">اس single-file demo میں اکاؤنٹس اور پوسٹس آپ کے browser کے local storage میں محفوظ ہوتی ہیں۔ دوسرے لوگوں کے ساتھ حقیقی مشترکہ استعمال کے لیے secure backend اور database درکار ہیں۔</p>
-    </section>
-  </main>
-  <footer>My Social Hub · Demo version</footer>
-
-  <script>
-    const USERS_KEY = "mySocialHubUsers_v1";
-    const POSTS_KEY = "mySocialHubPosts_v1";
-    const SESSION_KEY = "mySocialHubSession_v1";
-    const $ = (id) => document.getElementById(id);
-
-    function readStore(key, fallback) {
-      try { const value = JSON.parse(localStorage.getItem(key)); return value ?? fallback; }
-      catch { return fallback; }
-    }
-    function saveStore(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-    function getUsers() { return readStore(USERS_KEY, []); }
-    function getPosts() { return readStore(POSTS_KEY, []); }
-    function currentUser() {
-      const email = localStorage.getItem(SESSION_KEY);
-      return email ? getUsers().find(u => u.email === email) || null : null;
-    }
-    function showNotice(element, message, error = false) {
-      element.textContent = message;
-      element.className = error ? "notice error" : "notice";
-    }
-    function clearNotice(element) { element.textContent = ""; element.className = "hidden"; }
-    function showPanel(panel) {
-      $("loginPanel").classList.toggle("hidden", panel !== "login");
-      $("signupPanel").classList.toggle("hidden", panel !== "signup");
-      clearNotice($("authNotice"));
-    }
-    function showSection(section) {
-      ["welcomeCard", "createCard", "aboutCard"].forEach(id => $(id).classList.add("hidden"));
-      if (section === "create") {
-        if (!currentUser()) { $("authCard").scrollIntoView({behavior:"smooth"}); showNotice($("authNotice"), "پوسٹ کرنے کے لیے پہلے Login کریں یا Sign Up کریں۔", true); return; }
-        $("createCard").classList.remove("hidden");
-      } else if (section === "about") {
-        $("aboutCard").classList.remove("hidden");
-      } else if (currentUser()) {
-        $("welcomeCard").classList.remove("hidden");
-      }
-    }
-    async function hashPassword(password) {
-      if (window.crypto && crypto.subtle && window.TextEncoder) {
-        const bytes = new TextEncoder().encode(password);
-        const digest = await crypto.subtle.digest("SHA-256", bytes);
-        return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2,"0")).join("");
-      }
-      // Local demo fallback only. Do not use this approach for production authentication.
-      return "demo-" + btoa(unescape(encodeURIComponent(password)));
-    }
-
-    $("showSignup").addEventListener("click", () => showPanel("signup"));
-    $("showLogin").addEventListener("click", () => showPanel("login"));
-
-    $("signupForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const name = $("signupName").value.trim();
-      const email = $("signupEmail").value.trim().toLowerCase();
-      const password = $("signupPassword").value;
-      const confirm = $("signupConfirm").value;
-      const notice = $("authNotice");
-      if (name.length < 2) return showNotice(notice, "براہِ کرم اپنا درست نام لکھیں۔", true);
-      if (password.length < 6) return showNotice(notice, "پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے۔", true);
-      if (password !== confirm) return showNotice(notice, "دونوں پاس ورڈ ایک جیسے نہیں ہیں۔", true);
-      const users = getUsers();
-      if (users.some(u => u.email === email)) return showNotice(notice, "اس ای میل سے اکاؤنٹ پہلے سے موجود ہے۔ Login کریں۔", true);
-      try {
-        const passwordHash = await hashPassword(password);
-        users.push({ name, email, passwordHash, createdAt: new Date().toISOString() });
-        saveStore(USERS_KEY, users);
-        localStorage.setItem(SESSION_KEY, email);
-        $("signupForm").reset();
-        updateUI();
-        showNotice(notice, "اکاؤنٹ بن گیا! آپ Login ہو گئے ہیں۔");
-      } catch (err) {
-        showNotice(notice, "اکاؤنٹ محفوظ نہیں ہو سکا۔ براہِ کرم دوبارہ کوشش کریں۔", true);
-      }
-    });
-
-    $("loginForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const email = $("loginEmail").value.trim().toLowerCase();
-      const password = $("loginPassword").value;
-      const user = getUsers().find(u => u.email === email);
-      const notice = $("authNotice");
-      if (!user) return showNotice(notice, "یہ اکاؤنٹ نہیں ملا۔ پہلے Sign Up کریں۔", true);
-      try {
-        const hash = await hashPassword(password);
-        if (hash !== user.passwordHash) return showNotice(notice, "ای میل یا پاس ورڈ درست نہیں ہے۔", true);
-        localStorage.setItem(SESSION_KEY, email);
-        $("loginForm").reset();
-        updateUI();
-        showNotice(notice, "Login کامیاب ہو گیا!");
-      } catch (err) {
-        showNotice(notice, "Login نہیں ہو سکا۔ دوبارہ کوشش کریں۔", true);
-      }
-    });
-
-    $("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem(SESSION_KEY);
-      updateUI();
-      showPanel("login");
-      showNotice($("authNotice"), "آپ Logout ہو گئے ہیں۔");
-    });
-
-    $("postForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      const user = currentUser();
-      if (!user) return showNotice($("postNotice"), "پوسٹ کرنے کے لیے Login کریں۔", true);
-      const content = $("postContent").value.trim();
-      if (!content) return showNotice($("postNotice"), "پوسٹ خالی نہیں ہو سکتی۔", true);
-      const posts = getPosts();
-      posts.unshift({
-        id: (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()),
-        author: user.name,
-        email: user.email,
-        content,
-        createdAt: new Date().toISOString()
-      });
-      saveStore(POSTS_KEY, posts);
-      $("postForm").reset();
-      showNotice($("postNotice"), "آپ کی پوسٹ شائع ہو گئی!");
-      renderPosts();
-    });
-
-    $("homeLink").addEventListener("click", e => { e.preventDefault(); showSection("home"); window.scrollTo({top:0,behavior:"smooth"}); });
-    $("createLink").addEventListener("click", e => { e.preventDefault(); showSection("create"); });
-    $("goCreateBtn").addEventListener("click", () => showSection("create"));
-    $("aboutLink").addEventListener("click", e => { e.preventDefault(); showSection("about"); });
-    $("searchInput").addEventListener("input", renderPosts);
-
-    function renderPosts() {
-      const list = $("postsList");
-      const query = $("searchInput").value.trim().toLowerCase();
-      const posts = getPosts().filter(post =>
-        (post.content || "").toLowerCase().includes(query) ||
-        (post.author || "").toLowerCase().includes(query)
-      );
-      list.replaceChildren();
-      if (!posts.length) {
-        const empty = document.createElement("p");
-        empty.className = "empty";
-        empty.textContent = query ? "آپ کی تلاش سے ملتی جلتی کوئی پوسٹ نہیں ملی۔" : "ابھی کوئی پوسٹ نہیں ہے۔";
-        list.appendChild(empty);
-        return;
-      }
-      posts.forEach(post => {
-        const article = document.createElement("article");
-        article.className = "post";
-        const head = document.createElement("div");
-        head.className = "post-head";
-        const author = document.createElement("span");
-        author.className = "post-name";
-        author.textContent = post.author || "Unknown";
-        const date = document.createElement("span");
-        date.className = "post-date";
-        const parsed = new Date(post.createdAt);
-        date.textContent = Number.isNaN(parsed.getTime()) ? "" : parsed.toLocaleString();
-        head.append(author, date);
-        const content = document.createElement("div");
-        content.className = "post-content";
-        content.textContent = post.content || "";
-        article.append(head, content);
-        const user = currentUser();
-        if (user && user.email === post.email) {
-          const remove = document.createElement("button");
-          remove.className = "btn danger";
-          remove.type = "button";
-          remove.style.marginTop = "12px";
-          remove.textContent = "Delete Post";
-          remove.addEventListener("click", () => {
-            if (!confirm("کیا آپ یہ پوسٹ حذف کرنا چاہتے ہیں؟")) return;
-            saveStore(POSTS_KEY, getPosts().filter(p => p.id !== post.id));
-            renderPosts();
-          });
-          article.appendChild(remove);
-        }
-        list.appendChild(article);
-      });
-    }
-
-    function updateUI() {
-      const user = currentUser();
-      $("authCard").classList.toggle("hidden", !!user);
-      $("logoutBtn").classList.toggle("hidden", !user);
-      $("navUser").textContent = user ? "👤 " + user.name : "";
-      $("welcomeTitle").textContent = user ? "Welcome, " + user.name + "!" : "Welcome!";
-      if (user) showSection("home");
-      else { $("welcomeCard").classList.add("hidden"); $("createCard").classList.add("hidden"); }
-      renderPosts();
-    }
-
-    updateUI();
-  </script>
+      <p id="authSwitchText" class="muted">Already have an account? <a href="#" id="switchAuth">Login</a></p>
+      <p id="authMessage" role="status"></p>
+    </div>
+  </section>
+</main>
+<footer>My Social Hub · Demo version</footer>
+<script>
+const $ = id => document.getElementById(id);
+const USERS_KEY='msh_demo_users_v1', SESSION_KEY='msh_demo_session_v1', POSTS_KEY='msh_demo_posts_v1';
+let authMode='signup';
+let users=read(USERS_KEY,[]);
+let posts=read(POSTS_KEY,[]);
+let currentUser=read(SESSION_KEY,null);
+function read(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v===null?fallback:v}catch{return fallback}}
+function save(){localStorage.setItem(USERS_KEY,JSON.stringify(users));localStorage.setItem(POSTS_KEY,JSON.stringify(posts));localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser))}
+function escapeHtml(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function safeUrl(s=''){try{const u=new URL(s);return ['http:','https:'].includes(u.protocol)?u.href:''}catch{return ''}}
+function userName(){return currentUser?.name||'Guest'}
+function openPage(page){
+  ['home','videos','create','profile','about','auth'].forEach(p=>$('page-'+p).classList.toggle('hidden',p!==page));
+  document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+  if(page==='create'&&!currentUser){openPage('auth');$('authMessage').textContent='Post karne ke liye pehle demo login karein.';return}
+  if(page==='profile')renderProfile();
+  if(page==='videos')renderVideos();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.addEventListener('click',()=>openPage(b.dataset.page)));
+$('logoutBtn').addEventListener('click',()=>{currentUser=null;save();updateHeader();openPage('home')});
+function updateHeader(){
+  $('welcomeTitle').textContent=currentUser?`Welcome, ${currentUser.name}!`:'Welcome to My Social Hub!';
+  $('authNav').textContent=currentUser?'👤 Account':'🔐 Login / Sign Up';
+  $('authNav').dataset.page=currentUser?'profile':'auth';
+  $('logoutBtn').classList.toggle('hidden',!currentUser);
+}
+$('switchAuth').addEventListener('click',e=>{e.preventDefault();authMode=authMode==='signup'?'login':'signup';setAuthMode()});
+function setAuthMode(){
+  $('authTitle').textContent=authMode==='signup'?'Create Account / Sign Up':'Login to My Social Hub';
+  $('authName').classList.toggle('hidden',authMode==='login');$('authName').required=authMode==='signup';
+  $('authSubmit').textContent=authMode==='signup'?'Create Account':'Login';
+  $('authSwitchText').innerHTML=authMode==='signup'?'Already have an account? <a href="#" id="switchAuth">Login</a>':'New here? <a href="#" id="switchAuth">Create account</a>';
+  $('switchAuth').addEventListener('click',e=>{e.preventDefault();authMode=authMode==='signup'?'login':'signup';setAuthMode()});
+  $('authMessage').textContent='';
+}
+$('authForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=$('authEmail').value.trim().toLowerCase(), password=$('authPassword').value, name=$('authName').value.trim();
+  if(password.length<6){$('authMessage').textContent='Password must be at least 6 characters.';return}
+  if(authMode==='signup'){
+    if(!name){$('authMessage').textContent='Please enter your name.';return}
+    if(users.some(u=>u.email===email)){$('authMessage').textContent='This email is already registered in this browser. Please login.';return}
+    users.push({name,email,password});currentUser={name,email};save();updateHeader();$('authMessage').textContent='Demo account created successfully!';openPage('home');
+  }else{
+    const u=users.find(u=>u.email===email&&u.password===password);
+    if(!u){$('authMessage').textContent='Email/password not found in this browser. Sign up first.';return}
+    currentUser={name:u.name,email:u.email};save();updateHeader();openPage('home');
+  }
+});
+function detectType(url,chosen){
+  if(chosen!=='auto')return chosen;
+  if(/youtube\.com|youtu\.be/i.test(url))return 'youtube';
+  if(/\.(mp4|webm|ogg)(\?.*)?$/i.test(url))return 'video';
+  if(/\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(url))return 'image';
+  return url?'link':'text';
+}
+function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1);if(u.searchParams.get('v'))return u.searchParams.get('v');const m=u.pathname.match(/\/(?:embed|shorts)\/([^/?]+)/);return m?m[1]:''}catch{return ''}}
+$('publishBtn').addEventListener('click',()=>{
+  if(!currentUser){openPage('auth');$('authMessage').textContent='Post publish karne ke liye login karein.';return}
+  const text=$('postText').value.trim(), raw=$('mediaUrl').value.trim(), url=safeUrl(raw), type=detectType(raw,$('mediaType').value);
+  if(!text&&!url){alert('Please write something or add a valid media URL.');return}
+  if(raw&&!url){alert('Please enter a valid URL starting with https://');return}
+  posts.unshift({id:Date.now().toString()+Math.random().toString(16).slice(2),name:currentUser.name,email:currentUser.email,text,url,type,likes:[],comments:[],date:new Date().toISOString()});
+  save();$('postText').value='';$('mediaUrl').value='';$('mediaType').value='auto';renderFeed();openPage('home');
+});
+function mediaHtml(p){
+  const url=safeUrl(p.url||'');if(!url)return '';
+  if(p.type==='video')return `<video class="video" controls preload="metadata" src="${escapeHtml(url)}"></video>`;
+  if(p.type==='image')return `<img class="post-image" src="${escapeHtml(url)}" alt="Shared image" loading="lazy" onerror="this.style.display='none'">`;
+  if(p.type==='youtube'){const id=youtubeId(url);return id?`<iframe class="video" height="315" src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}" title="YouTube video" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`:`<a href="${escapeHtml(url)}" target="_blank" rel="noopener">Open video</a>`}
+  if(p.type==='link')return `<p><a href="${escapeHtml(url)}" target="_blank" rel="noopener">Open shared link ↗</a></p>`;
+  return '';
+}
+function renderPost(p){
+  const liked=currentUser&&p.likes.includes(currentUser.email), comments=(p.comments||[]).map(c=>`<div class="comment"><b>${escapeHtml(c.name)}:</b> ${escapeHtml(c.text)}</div>`).join('');
+  return `<article class="card" data-post="${escapeHtml(p.id)}"><div class="row"><div class="avatar">${escapeHtml((p.name||'?').slice(0,1).toUpperCase())}</div><div><b>${escapeHtml(p.name)}</b><div class="muted">${new Date(p.date).toLocaleString()}</div></div></div>
+  ${p.text?`<p style="white-space:pre-wrap;overflow-wrap:anywhere">${escapeHtml(p.text)}</p>`:''}${mediaHtml(p)}
+  <div class="actions"><button class="${liked?'liked':''}" data-action="like" data-id="${escapeHtml(p.id)}">❤️ ${liked?'Liked':'Like'} (${p.likes.length})</button><button data-action="comment" data-id="${escapeHtml(p.id)}">💬 Comment (${(p.comments||[]).length})</button><button data-action="share" data-id="${escapeHtml(p.id)}">🔗 Share</button>${currentUser&&currentUser.email===p.email?`<button data-action="delete" data-id="${escapeHtml(p.id)}">🗑️ Delete</button>`:''}</div>
+  <div class="comment-area" id="comments-${escapeHtml(p.id)}">${comments}<div class="row" style="margin-top:9px"><input class="field" style="margin:0" id="comment-input-${escapeHtml(p.id)}" placeholder="Write a comment..." maxlength="500"><button class="primary small-btn" data-action="send-comment" data-id="${escapeHtml(p.id)}">Send</button></div></div></article>`;
+}
+function renderFeed(list=posts){
+  $('postCount').textContent=`${list.length} posts`;
+  $('feed').innerHTML=list.length?list.map(renderPost).join(''):'<div class="empty">ابھی کوئی پوسٹ نہیں ہے۔ پہلی پوسٹ آپ بنائیں!</div>';
+  $('videoFeed').innerHTML=posts.filter(p=>['video','youtube'].includes(p.type)).map(renderPost).join('')||'<div class="empty">ابھی کوئی ویڈیو پوسٹ نہیں ہے۔</div>';
+}
+function renderVideos(){ $('videoFeed').innerHTML=posts.filter(p=>['video','youtube'].includes(p.type)).map(renderPost).join('')||'<div class="empty">ابھی کوئی ویڈیو پوسٹ نہیں ہے۔</div>'}
+document.body.addEventListener('click',async e=>{
+  const b=e.target.closest('button[data-action]');if(!b)return;
+  const p=posts.find(x=>x.id===b.dataset.id);if(!p)return;
+  const action=b.dataset.action;
+  if(action==='like'){
+    if(!currentUser){openPage('auth');return}
+    p.likes=p.likes||[];p.likes=p.likes.includes(currentUser.email)?p.likes.filter(x=>x!==currentUser.email):[...p.likes,currentUser.email];
+  }else if(action==='send-comment'){
+    if(!currentUser){openPage('auth');return}
+    const input=$('comment-input-'+p.id),text=input.value.trim();if(!text)return;
+    p.comments=p.comments||[];p.comments.push({name:currentUser.name,text});input.value='';
+  }else if(action==='comment'){
+    $('comment-input-'+p.id)?.focus();return;
+  }else if(action==='share'){
+    const shareText=`${p.name} on My Social Hub: ${p.text||p.url||'Post'}`;
+    try{if(navigator.share)await navigator.share({title:'My Social Hub',text:shareText,url:p.url||location.href});else if(navigator.clipboard){await navigator.clipboard.writeText(shareText);alert('Post text copied. You can paste it to share.')}else prompt('Copy this post:',shareText)}catch(err){}
+    return;
+  }else if(action==='delete'){
+    if(!currentUser||currentUser.email!==p.email)return;
+    if(!confirm('Delete this post?'))return;posts=posts.filter(x=>x.id!==p.id);
+  }
+  save();renderFeed();if(!$('page-videos').classList.contains('hidden'))renderVideos();
+});
+$('searchBox').addEventListener('input',()=>{
+  const q=$('searchBox').value.trim().toLowerCase();
+  const filtered=posts.filter(p=>(p.text||'').toLowerCase().includes(q)||(p.name||'').toLowerCase().includes(q));
+  renderFeed(filtered);openPageWithoutScroll('home');
+});
+function openPageWithoutScroll(page){['home','videos','create','profile','about','auth'].forEach(p=>$('page-'+p).classList.toggle('hidden',p!==page));document.querySelectorAll('#mainNav [data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===page))}
+function renderProfile(){
+  if(!currentUser){$('profileContent').innerHTML='<p>Please login to view your profile.</p><button class="primary" onclick="openPage(\\'auth\\')">Login / Sign Up</button>';return}
+  const mine=posts.filter(p=>p.email===currentUser.email);
+  $('profileContent').innerHTML=`<div class="row"><div class="avatar">${escapeHtml(currentUser.name.slice(0,1).toUpperCase())}</div><div><h2 style="margin:0">${escapeHtml(currentUser.name)}</h2><div class="muted">${escapeHtml(currentUser.email)}</div></div></div><hr><p>${mine.length} posts · ${mine.reduce((n,p)=>n+p.likes.length,0)} likes received</p><div>${mine.map(renderPost).join('')||'<p class="empty">آپ نے ابھی کوئی پوسٹ نہیں بنائی۔</p>'}</div>`;
+}
+updateHeader();setAuthMode();renderFeed();
+</script>
 </body>
-</html>'''
+</html>
+'''
 path = Path("/mnt/data/index.html")
 path.write_text(html, encoding="utf-8")
 print(f"Created {path} ({path.stat().st_size} bytes)")
