@@ -1,61 +1,259 @@
 <!DOCTYPE html>
 <html lang="ur">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Social Media App</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #101827;
-      color: white;
-      text-align: center;
-      padding: 25px;
-    }
-    .box {
-      max-width: 500px;
-      margin: 30px auto;
-      padding: 25px;
-      background: #1e293b;
-      border-radius: 15px;
-    }
-    button, input {
-      margin: 10px;
-      padding: 12px;
-      border-radius: 8px;
-    }
-    button {
-      cursor: pointer;
-      background: #16a34a;
-      color: white;
-      border: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Social Hub</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  color: #222;
+}
+header {
+  background: #1877f2;
+  color: white;
+  padding: 18px;
+  text-align: center;
+}
+header h1 {
+  margin: 0 0 12px;
+}
+header input {
+  width: 100%;
+  max-width: 450px;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+}
+nav {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: white;
+  padding: 12px;
+  box-shadow: 0 2px 5px #ccc;
+}
+nav a {
+  color: #1877f2;
+  text-decoration: none;
+  font-weight: bold;
+}
+.container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 12px;
+}
+.card {
+  background: white;
+  padding: 18px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #ddd;
+}
+textarea {
+  width: 100%;
+  min-height: 85px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  resize: vertical;
+}
+button {
+  background: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background: #0d5fc5;
+}
+.post {
+  overflow-wrap: anywhere;
+}
+.post p {
+  white-space: pre-wrap;
+}
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.actions button {
+  flex: 1;
+}
+.small {
+  color: #666;
+  font-size: 13px;
+}
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+</style>
 </head>
 <body>
-  <div class="box">
-    <h1>All Social Media App</h1>
-    <p>ایک ویڈیو منتخب کریں</p>
-    <input type="file" id="video" accept="video/*">
-    <h3>اپنا پلیٹ فارم منتخب کریں</h3>
-    <button onclick="openSite('https://www.youtube.com/upload')">YouTube</button>
-    <button onclick="openSite('https://www.facebook.com/')">Facebook</button>
-    <button onclick="openSite('https://www.instagram.com/')">Instagram</button>
-    <button onclick="openSite('https://www.tiktok.com/')">TikTok</button>
-    <p id="message">ویڈیو منتخب کرنے کے بعد پلیٹ فارم کھولیں۔</p>
-  </div>
-  <script>
-    function openSite(url) {
-      const video = document.getElementById('video');
-      if (!video.files.length) {
-        document.getElementById('message').textContent =
-          'پہلے ویڈیو منتخب کریں۔';
-        return;
-      }
-      window.open(url, '_blank');
-      document.getElementById('message').textContent =
-        'پلیٹ فارم کھل گیا ہے۔ ویڈیو وہاں الگ سے اپلوڈ کریں۔';
-    }
-  </script>
+
+<header>
+  <h1>🌐 My Social Hub</h1>
+  <p>Share your world with everyone!</p>
+  <input id="search" placeholder="Search posts..."
+         oninput="showPosts()">
+</header>
+
+<nav>
+  <a href="#home">🏠 Home</a>
+  <a href="#create">✍️ Create Post</a>
+  <a href="#about">ℹ️ About</a>
+</nav>
+
+<main class="container" id="home">
+
+  <section class="card" id="create">
+    <h2>Create a Post</h2>
+    <input id="author" placeholder="Your name"
+      style="width:100%;padding:12px;margin-bottom:10px">
+    <textarea id="message"
+      placeholder="What is on your mind?"></textarea>
+    <button onclick="addPost()">Publish Post</button>
+    <p class="small">Posts are saved in this browser.</p>
+  </section>
+
+  <section id="posts"></section>
+
+  <section class="card" id="about">
+    <h2>About My Social Hub</h2>
+    <p>Share messages, like posts and connect with people.</p>
+    <p class="small">
+      This is a starter demo. Real accounts, online messaging
+      and sharing between devices need a backend service.
+    </p>
+  </section>
+</main>
+
+<footer>Made with ❤️ by You</footer>
+
+<script>
+let posts = [];
+
+try {
+  posts = JSON.parse(
+    localStorage.getItem("socialHubPosts") || "[]"
+  );
+  if (!Array.isArray(posts)) posts = [];
+} catch (e) {
+  posts = [];
+}
+
+function savePosts() {
+  localStorage.setItem(
+    "socialHubPosts",
+    JSON.stringify(posts)
+  );
+}
+
+function addPost() {
+  const authorInput = document.getElementById("author");
+  const messageInput = document.getElementById("message");
+
+  const author = authorInput.value.trim() || "Guest";
+  const message = messageInput.value.trim();
+
+  if (!message) {
+    alert("Please write something first!");
+    return;
+  }
+
+  posts.unshift({
+    id: Date.now(),
+    author: author,
+    message: message,
+    likes: 0
+  });
+
+  savePosts();
+  messageInput.value = "";
+  showPosts();
+}
+
+function likePost(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+
+  post.likes++;
+  savePosts();
+  showPosts();
+}
+
+function deletePost(id) {
+  if (!confirm("Delete this post?")) return;
+
+  posts = posts.filter(p => p.id !== id);
+  savePosts();
+  showPosts();
+}
+
+function showPosts() {
+  const list = document.getElementById("posts");
+  const query = document.getElementById("search")
+    .value.toLowerCase();
+
+  list.innerHTML = "";
+
+  const filtered = posts.filter(p =>
+    p.author.toLowerCase().includes(query) ||
+    p.message.toLowerCase().includes(query)
+  );
+
+  if (filtered.length === 0) {
+    list.innerHTML =
+      '<div class="card">No posts yet. Create your first post!</div>';
+    return;
+  }
+
+  filtered.forEach(post => {
+    const card = document.createElement("article");
+    card.className = "card post";
+
+    const heading = document.createElement("h3");
+    heading.textContent = "👤 " + post.author;
+
+    const text = document.createElement("p");
+    text.textContent = post.message;
+
+    const count = document.createElement("p");
+    count.className = "small";
+    count.textContent = "❤️ " + post.likes + " Likes";
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const like = document.createElement("button");
+    like.textContent = "❤️ Like";
+    like.onclick = () => likePost(post.id);
+
+    const remove = document.createElement("button");
+    remove.textContent = "🗑️ Delete";
+    remove.style.background = "#d93025";
+    remove.onclick = () => deletePost(post.id);
+
+    actions.append(like, remove);
+    card.append(heading, text, count, actions);
+    list.appendChild(card);
+  });
+}
+
+showPosts();
+</script>
+
 </body>
 </html>
