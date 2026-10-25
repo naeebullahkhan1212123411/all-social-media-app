@@ -1,464 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Social Hub</title>
 <style>
-:root {
-  --primary:#079bb2;
-  --bg:#f3f7f8;
-  --card:#fff;
-  --text:#20313a;
-  --muted:#687780;
-}
-* { box-sizing:border-box; }
-body {
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-header {
-  background:linear-gradient(120deg,#0788b5,#08b99c);
-  color:white;
-  padding:28px 16px 24px;
-  text-align:center;
-}
-header h1 { margin:0; font-size:clamp(27px,5vw,42px); }
-header p { margin:8px 0 18px; }
-.search {
-  width:min(760px,100%);
-  padding:14px 18px;
-  border:0;
-  border-radius:28px;
-  font-size:16px;
-}
-nav {
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:8px;
-  padding:12px;
-  background:white;
-  position:sticky;
-  top:0;
-  z-index:5;
-}
-button {
-  border:0;
-  border-radius:10px;
-  padding:11px 14px;
-  background:var(--primary);
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-}
-.navbtn { background:#edf5f6; color:#24424a; }
-.navbtn.active { background:var(--primary); color:white; }
-.secondary { background:#eaf2f4; color:#23434c; }
-.danger { background:#d94b4b; }
-main { max-width:1000px; margin:22px auto; padding:0 14px 35px; }
-.panel,.post,.video-card {
-  background:var(--card);
-  border-radius:17px;
-  padding:20px;
-  margin-bottom:16px;
-  box-shadow:0 4px 20px #173c4810;
-}
-h2 { margin:0 0 14px; }
-.muted { color:var(--muted); font-size:14px; }
-label { display:block; font-size:14px; font-weight:bold; margin:12px 0 6px; }
-input,textarea,select {
-  width:100%;
-  padding:12px;
-  border:1px solid #d5e1e5;
-  border-radius:10px;
-  font:inherit;
-  background:white;
-  color:#20313a;
-}
-textarea { min-height:105px; resize:vertical; }
-.actions,.post-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-.hidden { display:none!important; }
-.post-head { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-.avatar {
-  width:42px;height:42px;border-radius:50%;
-  background:#d9f3f3;display:grid;place-items:center;
-  font-weight:bold;color:#087c8d;overflow:hidden;flex-shrink:0;
-}
-.avatar img { width:100%;height:100%;object-fit:cover; }
-.post-media { max-width:100%;max-height:500px;display:block;margin:12px auto;border-radius:12px; }
-.post-text { white-space:pre-wrap;line-height:1.5; }
-.post-actions { border-top:1px solid #e2eaed;padding-top:12px; }
-.comment-item { padding:7px 0;border-bottom:1px solid #e2eaed;font-size:14px; }
-.embed-wrap {
-  position:relative;width:100%;max-width:560px;
-  margin:12px auto;aspect-ratio:9/16;
-  background:#101820;border-radius:12px;overflow:hidden;
-}
-.embed-wrap iframe { width:100%;height:100%;border:0; }
-.embed-wrap.landscape { aspect-ratio:16/9; }
-.platform {
-  display:inline-block;background:#e5f8f7;color:#087c80;
-  padding:5px 9px;border-radius:20px;font-size:12px;
-}
-.notice { padding:12px;border-radius:10px;background:#fff7dd;color:#725817;font-size:13px;line-height:1.5; }
-footer { text-align:center;color:var(--muted);padding:20px;font-size:13px; }
-@media(max-width:520px) {
-  header { padding:22px 12px; }
-  .navbtn { padding:10px;font-size:12px; }
-  .panel,.post { padding:15px; }
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f7;color:#20313a}
+header{background:linear-gradient(120deg,#087db4,#08b99c);color:white;text-align:center;padding:25px 12px}
+header h1{margin:0 0 8px;font-size:32px}
+input,textarea,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:9px;font-size:16px}
+header input{max-width:650px;border-radius:25px}
+nav{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;background:white;padding:12px;position:sticky;top:0}
+button{background:#079bb2;color:white;border:0;border-radius:8px;padding:11px 14px;cursor:pointer;font-size:14px;margin:3px}
+button:hover{opacity:.85}
+main{max-width:900px;margin:20px auto;padding:0 12px}
+.card,.post{background:white;padding:18px;border-radius:14px;margin-bottom:15px;box-shadow:0 3px 12px #0000000a}
+.hidden{display:none!important}
+.muted{color:#718087;font-size:14px}
+.post img,.post video{max-width:100%;display:block;margin:12px auto;border-radius:10px}
+iframe{width:100%;height:400px;border:0;border-radius:10px;margin-top:12px}
+.actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.comment{padding:7px;border-top:1px solid #eee;font-size:14px}
+footer{text-align:center;padding:20px;color:#687780}
+body.dark{background:#142027;color:#edf5f7}
+body.dark .card,body.dark .post,body.dark nav{background:#24343d;color:#edf5f7}
+body.dark input,body.dark textarea,body.dark select{background:#19272e;color:white;border-color:#50616a}
+@media(max-width:500px){header h1{font-size:26px}nav button{padding:9px;font-size:12px}iframe{height:300px}}
 </style>
 </head>
 <body>
 <header>
-  <h1>🌐 My Social Hub</h1>
-  <p>Share your world with everyone!</p>
-  <input id="searchBox" class="search" placeholder="Search posts or people...">
+<h1>🌐 My Social Hub</h1>
+<p>Share your world with everyone!</p>
+<input id="search" placeholder="Search posts..." oninput="renderPosts()">
 </header>
 
 <nav>
-  <button class="navbtn active" data-page="home">🏠 Home</button>
-  <button class="navbtn" data-page="videos">🎬 Videos</button>
-  <button class="navbtn" data-page="create">✍️ Create Post</button>
-  <button class="navbtn" data-page="profile">👤 Profile</button>
-  <button class="navbtn" data-page="settings">⚙️ Settings</button>
-  <button class="navbtn" data-page="about">ℹ️ About</button>
-  <button class="navbtn" data-page="auth" id="authNav">🔐 Login / Sign Up</button>
+<button onclick="page('home')">🏠 Home</button>
+<button onclick="page('videos')">🎬 Videos</button>
+<button onclick="page('create')">✍️ Create Post</button>
+<button onclick="page('profile')">👤 Profile</button>
+<button onclick="page('settings')">⚙️ Settings</button>
+<button onclick="page('auth')" id="loginButton">🔐 Login / Sign Up</button>
 </nav>
 
 <main>
-<section id="homePage">
-  <div class="panel">
-    <h2>Welcome to My Social Hub!</h2>
-    <p class="muted">Share text, photos and video links with your community.</p>
-    <div class="actions">
-      <button onclick="showPage('create')">✍️ Create Post</button>
-      <button class="secondary" onclick="showPage('videos')">▶ Explore Videos</button>
-    </div>
-  </div>
-  <div class="panel">
-    <h2>Recent Posts <span class="muted" id="postCount"></span></h2>
-    <div id="feed"></div>
-  </div>
+<section id="home" class="page">
+<div class="card">
+<h2>Welcome to My Social Hub!</h2>
+<p>Share photos, videos and posts with your community.</p>
+<button onclick="page('create')">✍️ Create Post</button>
+<button onclick="page('videos')">▶ Watch Videos</button>
+</div>
+<div class="card"><h2>Recent Posts</h2><div id="posts"></div></div>
 </section>
 
-<section id="videosPage" class="hidden">
-  <div class="panel">
-    <h2>🎬 Watch Videos</h2>
-    <p class="muted">Paste a public video link from YouTube, TikTok, Facebook or Instagram.</p>
-    <label for="videoUrl">Video link</label>
-    <input id="videoUrl" type="url" placeholder="Paste video URL">
-    <label for="videoPlatform">Platform</label>
-    <select id="videoPlatform">
-      <option>YouTube</option><option>TikTok</option>
-      <option>Facebook</option><option>Instagram</option><option>Other</option>
-    </select>
-    <label for="videoCaption">Caption</label>
-    <input id="videoCaption" placeholder="Write a caption">
-    <div class="actions"><button onclick="addVideo()">▶ Add Video</button></div>
-  </div>
-  <div id="videoList"></div>
+<section id="create" class="page hidden">
+<div class="card">
+<h2>Create a Post</h2>
+<textarea id="postText" placeholder="What is on your mind?"></textarea>
+<label>Choose photo or video</label>
+<input type="file" id="postFile" accept="image/*,video/*">
+<label>Or paste a YouTube, TikTok or Instagram link</label>
+<input id="postLink" placeholder="https://...">
+<button onclick="createPost()">Publish Post</button>
+</div>
 </section>
 
-<section id="createPage" class="hidden">
-  <div class="panel">
-    <h2>✍️ Create a Post</h2>
-    <p class="muted" id="createAs">Share an update.</p>
-    <label for="postText">What is on your mind?</label>
-    <textarea id="postText" placeholder="Write something..."></textarea>
-    <label for="postFile">Add a photo or video</label>
-    <input id="postFile" type="file" accept="image/*,video/*">
-    <label for="postLink">Or add a video link</label>
-    <input id="postLink" type="url" placeholder="Paste video link">
-    <div class="actions"><button onclick="createPost()">Publish Post</button></div>
-    <p class="notice">Demo: uploaded media stays in this browser. Online sharing requires a backend and storage service.</p>
-  </div>
+<section id="videos" class="page hidden">
+<div class="card">
+<h2>🎬 Watch Videos</h2>
+<p class="muted">Paste a public YouTube, TikTok, Facebook or Instagram video link.</p>
+<input id="videoUrl" placeholder="Paste video URL">
+<input id="videoCaption" placeholder="Video caption (optional)">
+<button onclick="addVideo()">Add Video</button>
+</div>
+<div id="videosList"></div>
 </section>
 
-<section id="profilePage" class="hidden">
-  <div class="panel">
-    <h2>👤 My Profile</h2>
-    <div class="post-head">
-      <div class="avatar" id="profileAvatar">?</div>
-      <div><h3 id="profileName">Guest</h3><p class="muted" id="profileEmail">Not logged in</p></div>
-    </div>
-    <label for="profileDisplayName">Display name</label>
-    <input id="profileDisplayName" placeholder="Your name">
-    <label for="profileBio">Bio</label>
-    <textarea id="profileBio" placeholder="About you..."></textarea>
-    <label for="profilePhoto">Profile photo</label>
-    <input id="profilePhoto" type="file" accept="image/*">
-    <div class="actions"><button onclick="saveProfile()">Save Profile</button></div>
-    <hr><h3>My Posts</h3><div id="myPosts"></div>
-  </div>
+<section id="profile" class="page hidden">
+<div class="card">
+<h2>👤 My Profile</h2>
+<p id="profileStatus">Guest user</p>
+<input id="displayName" placeholder="Your display name">
+<textarea id="bio" placeholder="About you"></textarea>
+<button onclick="saveProfile()">Save Profile</button>
+<h3>My Posts</h3><div id="myPosts"></div>
+</div>
 </section>
 
-<section id="settingsPage" class="hidden">
-  <div class="panel">
-    <h2>⚙️ Settings</h2>
-    <label for="themeSelect">Theme</label>
-    <select id="themeSelect" onchange="applyTheme()">
-      <option value="light">Light</option><option value="dark">Dark</option>
-    </select>
-    <label><input id="privateMode" type="checkbox" style="width:auto"> Private demo profile</label>
-    <label><input id="notifyMode" type="checkbox" style="width:auto"> Demo notifications</label>
-    <div class="actions">
-      <button onclick="saveSettings()">Save Settings</button>
-      <button class="secondary" onclick="exportData()">Export Data</button>
-      <button class="danger" onclick="clearDemoData()">Clear Data</button>
-    </div>
-    <p class="notice">These are local demo settings, not real platform-wide privacy controls.</p>
-  </div>
+<section id="settings" class="page hidden">
+<div class="card">
+<h2>⚙️ Settings</h2>
+<label>Website theme</label>
+<select id="theme" onchange="setTheme()">
+<option value="light">Light Theme</option>
+<option value="dark">Dark Theme</option>
+</select>
+<button onclick="exportData()">Export My Posts</button>
+<button onclick="clearData()">Delete Demo Posts</button>
+<p class="muted">Theme and posts are saved in this browser.</p>
+</div>
 </section>
 
-<section id="aboutPage" class="hidden">
-  <div class="panel">
-    <h2>ℹ️ About My Social Hub</h2>
-    <p>My Social Hub is a social website demo for posts, profiles and video links.</p>
-    <p class="notice">Real accounts, secure login, shared online posts and uploads require a backend.</p>
-  </div>
-</section>
-
-<section id="authPage" class="hidden">
-  <div class="panel">
-    <h2>🔐 Login / Sign Up</h2>
-    <div class="grid">
-      <div>
-        <h3>Create Account (Demo)</h3>
-        <label for="signupName">Name</label><input id="signupName" placeholder="Your name">
-        <label for="signupEmail">Email</label><input id="signupEmail" type="email" placeholder="you@example.com">
-        <label for="signupPassword">Password</label><input id="signupPassword" type="password" placeholder="At least 6 characters">
-        <div class="actions"><button onclick="signup()">Sign Up</button></div>
-      </div>
-      <div>
-        <h3>Login (Demo)</h3>
-        <label for="loginEmail">Email</label><input id="loginEmail" type="email" placeholder="Email">
-        <label for="loginPassword">Password</label><input id="loginPassword" type="password" placeholder="Password">
-        <div class="actions">
-          <button onclick="login()">Login</button>
-          <button class="secondary" onclick="logout()">Logout</button>
-        </div>
-      </div>
-    </div>
-    <p id="authMessage" class="muted"></p>
-    <p class="notice">Warning: this demo stores account details in your browser and is not secure authentication. Never use a password you use elsewhere.</p>
-  </div>
+<section id="auth" class="page hidden">
+<div class="card">
+<h2>🔐 Sign Up</h2>
+<input id="signupName" placeholder="Your name">
+<input id="signupEmail" type="email" placeholder="Email">
+<input id="signupPassword" type="password" placeholder="Password">
+<button onclick="signup()">Create Account</button>
+<hr>
+<h2>Login</h2>
+<input id="loginEmail" type="email" placeholder="Email">
+<input id="loginPassword" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+<p id="authMessage"></p>
+<p class="muted">Demo only: this is not secure authentication. Do not use your real password.</p>
+</div>
 </section>
 </main>
 
-<footer>My Social Hub · Demo version</footer>
+<footer>My Social Hub · Demo Version</footer>
 
 <script>
-const $ = id => document.getElementById(id);
-const KEYS = {
- posts:'msh_posts_v1', videos:'msh_videos_v1',
- profile:'msh_profile_v1', accounts:'msh_demo_accounts_v1',
- session:'msh_demo_session_v1', settings:'msh_settings_v1'
-};
-function read(key,fallback) {
- try { const v=localStorage.getItem(key); return v?JSON.parse(v):fallback; }
- catch(e) { return fallback; }
-}
-function write(key,value) {
- try { localStorage.setItem(key,JSON.stringify(value)); return true; }
- catch(e) { alert('Storage full. Try a smaller file.'); return false; }
-}
-let posts=read(KEYS.posts,[]);
-let videos=read(KEYS.videos,[]);
-let profile=read(KEYS.profile,{name:'Guest',email:'',bio:'',photo:''});
-let accounts=read(KEYS.accounts,[]);
-let session=read(KEYS.session,null);
-let settings=read(KEYS.settings,{theme:'light',privateMode:false,notifyMode:false});
+const $=id=>document.getElementById(id);
 
-function currentName(){return session?.name||profile.name||'Guest';}
-function escapeHTML(s='') {
+function load(key,fallback){
+ try{return JSON.parse(localStorage.getItem(key))||fallback}
+ catch(e){return fallback}
+}
+function save(key,value){
+ try{localStorage.setItem(key,JSON.stringify(value));return true}
+ catch(e){alert("Browser storage is full. Try a smaller file.");return false}
+}
+
+let posts=load("hub_posts",[]);
+let videos=load("hub_videos",[]);
+let profile=load("hub_profile",{name:"Guest",bio:""});
+let accounts=load("hub_accounts",[]);
+let user=load("hub_user",null);
+
+function esc(s=""){
  return String(s).replace(/[&<>"']/g,c=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
  }[c]));
 }
-function safeLink(url) {
- try { let u=new URL(url); return ['http:','https:'].includes(u.protocol)?u.href:''; }
- catch(e) { return ''; }
+function page(id){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ $(id).classList.remove("hidden");
+ if(id==="home")renderPosts();
+ if(id==="videos")renderVideos();
+ if(id==="profile")renderProfile();
+ window.scrollTo(0,0);
 }
-function avatarHTML(name,photo) {
- return photo?`<img src="${photo}" alt="">`:escapeHTML((name||'?').trim().charAt(0).toUpperCase()||'?');
+function name(){return user?user.name:(profile.name||"Guest");}
+function renderPosts(){
+ const q=$("search").value.toLowerCase();
+ let list=posts.filter(p=>(p.text+" "+p.name).toLowerCase().includes(q));
+ $("posts").innerHTML=list.length?list.slice().reverse().map(postHTML).join(""):"<p class='muted'>No posts yet. Create your first post!</p>";
 }
-function showPage(page) {
- document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden'));
- $(page+'Page').classList.remove('hidden');
- document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
- if(page==='profile')renderProfile();
- if(page==='home')renderFeed();
- if(page==='videos')renderVideos();
- window.scrollTo({top:0,behavior:'smooth'});
-}
-document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
-$('searchBox').addEventListener('input',renderFeed);
-
-function renderFeed() {
- const q=$('searchBox').value.trim().toLowerCase();
- const list=posts.filter(p=>(p.text+' '+p.name+' '+(p.link||'')).toLowerCase().includes(q));
- $('postCount').textContent=`(${list.length} posts)`;
- $('feed').innerHTML=list.length?list.slice().reverse().map(postHTML).join(''):'<p class="muted">No posts yet. Be the first!</p>';
-}
-function postHTML(p) {
- let media='';
- if(p.media&&p.mediaType==='image')media=`<img class="post-media" src="${p.media}" alt="Post image">`;
- if(p.media&&p.mediaType==='video')media=`<video class="post-media" controls playsinline src="${p.media}"></video>`;
- if(p.link)media+=videoEmbed(p.link,p.platform||'');
+function postHTML(p){
+ let media="";
+ if(p.file&&p.type==="image")media=`<img src="${p.file}" alt="Post photo">`;
+ if(p.file&&p.type==="video")media=`<video controls playsinline src="${p.file}"></video>`;
+ if(p.link)media+=embed(p.link);
  return `<article class="post">
- <div class="post-head"><div class="avatar">${avatarHTML(p.name,p.photo)}</div>
- <div><strong>${escapeHTML(p.name||'Guest')}</strong><div class="muted">${escapeHTML(p.date||'')}</div></div></div>
- ${p.text?`<div class="post-text">${escapeHTML(p.text)}</div>`:''}${media}
- <div class="post-actions">
- <button class="secondary" onclick="likePost('${p.id}')">❤️ Like (${p.likes||0})</button>
- <button class="secondary" onclick="commentPost('${p.id}')">💬 Comment (${(p.comments||[]).length})</button>
- <button class="secondary" onclick="sharePost('${p.id}')">🔗 Share</button>
- ${p.email&&session&&p.email===session.email?`<button class="danger" onclick="deletePost('${p.id}')">Delete</button>`:''}
+ <b>👤 ${esc(p.name)}</b><p>${esc(p.text)}</p>${media}
+ <div class="actions">
+ <button onclick="like('${p.id}')">❤️ Like ${p.likes||0}</button>
+ <button onclick="comment('${p.id}')">💬 Comment</button>
+ <button onclick="share('${p.id}')">🔗 Share</button>
+ ${user&&p.email===user.email?`<button onclick="removePost('${p.id}')">Delete</button>`:""}
  </div>
- <div class="comment-list">${(p.comments||[]).map(c=>`<div class="comment-item"><strong>${escapeHTML(c.name)}:</strong> ${escapeHTML(c.text)}</div>`).join('')}</div>
+ ${(p.comments||[]).map(c=>`<div class="comment"><b>${esc(c.name)}:</b> ${esc(c.text)}</div>`).join("")}
  </article>`;
 }
-function createPost() {
- const text=$('postText').value.trim(),link=safeLink($('postLink').value.trim()),file=$('postFile').files[0];
- if(!text&&!link&&!file){alert('Write a post, add a link, or choose a file.');return;}
- const add=media=>{
-  posts.push({id:String(Date.now())+Math.random().toString(16).slice(2),
-   name:currentName(),email:session?.email||'',photo:profile.photo||'',text,link,
-   platform:detectPlatform(link),media:media?.data||'',mediaType:media?.type||'',
-   date:new Date().toLocaleString(),likes:0,comments:[]});
-  if(write(KEYS.posts,posts)){
-   $('postText').value='';$('postLink').value='';$('postFile').value='';showPage('home');
+function createPost(){
+ const text=$("postText").value.trim();
+ const link=safeURL($("postLink").value);
+ const file=$("postFile").files[0];
+ if(!text&&!link&&!file){alert("Write a post or add a photo/video/link.");return;}
+ const publish=data=>{
+  posts.push({id:String(Date.now()),name:name(),email:user?user.email:"",text,link,
+  file:data?data.url:"",type:data?data.type:"",likes:0,comments:[]});
+  if(save("hub_posts",posts)){
+   $("postText").value="";$("postLink").value="";$("postFile").value="";
+   page("home");
   }
  };
- if(file) {
+ if(file){
+  if(file.size>1500000){alert("Please choose a file smaller than 1.5 MB for this demo.");return;}
   const r=new FileReader();
-  r.onload=()=>add({data:r.result,type:file.type.startsWith('image/')?'image':file.type.startsWith('video/')?'video':''});
+  r.onload=()=>publish({url:r.result,type:file.type.startsWith("image/")?"image":"video"});
   r.readAsDataURL(file);
- } else add(null);
+ }else publish(null);
 }
-function likePost(id) {
- const p=posts.find(p=>p.id===id);
- if(p){p.likes=(p.likes||0)+1;write(KEYS.posts,posts);renderFeed();renderProfile();}
+function safeURL(value){
+ try{let u=new URL(value);return ["https:","http:"].includes(u.protocol)?u.href:""}
+ catch(e){return ""}
 }
-function commentPost(id) {
- const text=prompt('Write your comment:');
- if(!text||!text.trim())return;
- const p=posts.find(p=>p.id===id);
- if(p){p.comments=p.comments||[];p.comments.push({name:currentName(),text:text.trim()});write(KEYS.posts,posts);renderFeed();renderProfile();}
-}
-function sharePost(id) {
- const p=posts.find(p=>p.id===id);if(!p)return;
- shareText(`${p.name}: ${p.text||p.link||'My Social Hub post'}`);
-}
-function shareText(text) {
- if(navigator.share)navigator.share({title:'My Social Hub',text}).catch(()=>{});
- else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>alert('Copied!')).catch(()=>prompt('Copy:',text));
- else prompt('Copy:',text);
-}
-function deletePost(id) {
- if(!confirm('Delete this post?'))return;
- posts=posts.filter(p=>p.id!==id);write(KEYS.posts,posts);renderFeed();renderProfile();
-}
-function detectPlatform(link) {
- if(!link)return '';
- if(/youtube\.com|youtu\.be/i.test(link))return 'YouTube';
- if(/tiktok\.com/i.test(link))return 'TikTok';
- if(/facebook\.com|fb\.watch/i.test(link))return 'Facebook';
- if(/instagram\.com/i.test(link))return 'Instagram';
- return 'Other';
-}
-function videoEmbed(url,platform) {
- const u=safeLink(url);if(!u)return '';
- let src='',landscape=false;
- try {
-  const x=new URL(u),host=x.hostname.toLowerCase();
-  if(host.includes('youtube.com')||host.includes('youtu.be')) {
-   let id=x.searchParams.get('v');
-   if(host.includes('youtu.be'))id=x.pathname.split('/').filter(Boolean)[0];
-   if(x.pathname.includes('/shorts/'))id=x.pathname.split('/shorts/')[1]?.split('/')[0];
-   if(x.pathname.includes('/embed/'))id=x.pathname.split('/embed/')[1]?.split('/')[0];
-   if(id){src='https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id);landscape=true;}
-  } else if(host.includes('tiktok.com')) {
-   const m=x.pathname.match(/\/video\/(\d+)/);
-   if(m)src='https://www.tiktok.com/embed/v2/'+m[1];
-  } else if(host.includes('instagram.com')&&/\/(p|reel|tv)\//.test(x.pathname)) {
-   src=x.origin+x.pathname.replace(/\/?$/,'/')+'embed/';
+function embed(url){
+ let u=safeURL(url);if(!u)return "";
+ try{
+  let x=new URL(u),host=x.hostname.toLowerCase(),src="";
+  if(host.includes("youtube.com")||host.includes("youtu.be")){
+   let id=x.searchParams.get("v");
+   if(host.includes("youtu.be"))id=x.pathname.split("/").filter(Boolean)[0];
+   if(x.pathname.includes("/shorts/"))id=x.pathname.split("/shorts/")[1].split("/")[0];
+   if(id)src="https://www.youtube-nocookie.com/embed/"+encodeURIComponent(id);
+  }else if(host.includes("tiktok.com")){
+   let m=x.pathname.match(/\/video\/(\d+)/);
+   if(m)src="https://www.tiktok.com/embed/v2/"+m[1];
+  }else if(host.includes("instagram.com")&&/\/(p|reel|tv)\//.test(x.pathname)){
+   src=x.origin+x.pathname.replace(/\/?$/,"/")+"embed/";
   }
- } catch(e) {}
- if(src)return `<div class="embed-wrap ${landscape?'landscape':''}">
- <iframe src="${escapeHTML(src)}" title="Embedded video" loading="lazy"
- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
- allowfullscreen></iframe></div>
- <p class="muted"><a href="${escapeHTML(u)}" target="_blank" rel="noopener">Open original video</a></p>`;
- return `<p><a href="${escapeHTML(u)}" target="_blank" rel="noopener">▶ Open ${escapeHTML(platform||'')} video in a new tab</a></p>`;
+  if(src)return `<iframe src="${esc(src)}" allowfullscreen loading="lazy"></iframe>`;
+ }catch(e){}
+ return `<p><a href="${esc(u)}" target="_blank" rel="noopener">▶ Open original video</a></p>`;
 }
-function addVideo() {
- const url=safeLink($('videoUrl').value.trim());
- if(!url){alert('Enter a valid video link.');return;}
- videos.push({id:String(Date.now()),url,platform:$('videoPlatform').value,caption:$('videoCaption').value.trim(),name:currentName()});
- write(KEYS.videos,videos);$('videoUrl').value='';$('videoCaption').value='';renderVideos();
+function like(id){
+ let p=posts.find(p=>p.id===id);
+ if(p){p.likes=(p.likes||0)+1;save("hub_posts",posts);renderPosts();}
 }
-function renderVideos() {
- $('videoList').innerHTML=videos.length?videos.slice().reverse().map(v=>`
- <div class="video-card"><span class="platform">${escapeHTML(v.platform)}</span>
- <h3>${escapeHTML(v.caption||'Shared video')}</h3>${videoEmbed(v.url,v.platform)}
- <p class="muted">Shared by ${escapeHTML(v.name)}</p>
- <button class="secondary" onclick="shareText('${escapeHTML(v.url)}')">🔗 Share</button></div>`).join(''):
- '<div class="panel muted">No videos yet. Add a public video link above.</div>';
+function comment(id){
+ let text=prompt("Write your comment:");
+ if(!text||!text.trim())return;
+ let p=posts.find(p=>p.id===id);
+ if(p){p.comments=p.comments||[];p.comments.push({name:name(),text:text.trim()});save("hub_posts",posts);renderPosts();}
 }
-function renderProfile() {
- $('profileName').textContent=currentName();
- $('profileEmail').textContent=session?.email||'Not logged in';
- $('profileDisplayName').value=profile.name==='Guest'?'':profile.name;
- $('profileBio').value=profile.bio||'';
- $('profileAvatar').innerHTML=avatarHTML(currentName(),profile.photo);
- $('myPosts').innerHTML=posts.filter(p=>p.email&&p.email===session?.email).slice().reverse().map(postHTML).join('')||'<p class="muted">Your posts appear here after login.</p>';
- $('createAs').textContent='Posting as '+currentName();
+function share(id){
+ let p=posts.find(p=>p.id===id);if(!p)return;
+ const text=p.text||"My Social Hub post";
+ if(navigator.share)navigator.share({title:"My Social Hub",text}).catch(()=>{});
+ else prompt("Copy your post:",text);
 }
-function saveProfile() {
- profile.name=$('profileDisplayName').value.trim()||currentName();
- profile.bio=$('profileBio').value.trim();
- write(KEYS.profile,profile);
- if(session){session.name=profile.name;write(KEYS.session,session);}
- updateAuth();renderProfile();alert('Profile saved on this browser.');
+function removePost(id){
+ if(!confirm("Delete this post?"))return;
+ posts=posts.filter(p=>p.id!==id);save("hub_posts",posts);renderPosts();renderProfile();
 }
-$('profilePhoto').addEventListener('change',e=>{
- const f=e.target.files[0];if(!f)return;
- if(!f.type.startsWith('image/')){alert('Choose an image file.');return;}
- const r=new FileReader();r.onload=()=>{profile.photo=r.result;write(KEYS.profile,profile);renderProfile();};r.readAsDataURL(f);
-});
-function signup() {
- const name=$('signupName').value.trim(),email=$('signupEmail').value.trim().toLowerCase(),password=$('signupPassword').value;
- if(!name||!email||password.length<6){$('authMessage').textContent='Enter your name, email, and password of at least 6 characters.';return;}
- if(accounts.some(a=>a.email===email)){$('authMessage').textContent='Email already exists. Try Login.';return;}
- accounts.push({name,email,password});
- if(!write(KEYS.accounts,accounts))return;
- session={name,email};profile.name=name;profile.email=email;
- write(KEYS.profile,profile);write(KEYS.session,session);
- $('authMessage').textContent='Demo account created.';updateAuth();showPage('profile');
+function addVideo(){
+ let url=safeURL($("videoUrl").value);
+ if(!url){alert("Please enter a valid video link.");return;}
+ videos.push({url,caption:$("videoCaption").value.trim(),name:name()});
+ if(save("hub_videos",videos)){
+  $("videoUrl").value="";$("videoCaption").value="";renderVideos();
+ }
 }
-function login() {
- const email=$('loginEmail').value.trim().toLowerCase(),password=$('loginPassword').value;
- const a=accounts.find(a=>a.email===email&&a.password===password);
- if(!a){$('authMessage').textContent='Login failed. Check details or sign up.';return;}
- session={name:a.name,email:a.email};profile.name=a.name;profile.email=email;
- write(KEYS.session,session);write(KEYS.profile,profile);
- $('authMessage').textContent='Logged in on this browser.';updateAuth();showPage('profile');
+function renderVideos(){
+ $("videosList").innerHTML=videos.length?videos.slice().reverse().map(v=>
+ `<div class="card"><h3>${esc(v.caption||"Shared Video")}</h3>${embed(v.url)}
+ <p class="muted">Shared by ${esc(v.name)}</p>
+ <a href="${esc(v.url)}" target="_blank" rel="noopener">Open original video</a></div>`
+ ).join(""):"<div class='card'>No videos yet. Add a video link above.</div>";
 }
-function logout() {
- session=null;write(KEYS.session,null);
- $('authMessage').textContent='Logged out.';updateAuth();renderProfile();
+function renderProfile(){
+ $("profileStatus").textContent=user?user.email:"Guest user";
+ $("displayName").value=profile.name||"";
+ $("bio").value=profile.bio||"";
+ $("myPosts").innerHTML=posts.filter(p=>user&&p.email===user.email).map(postHTML).join("")||"<p>No posts found for this account.</p>";
 }
-function updateAuth() {
- $('authNav').textContent=session?'👤 '+session.name:'🔐 Login / Sign Up';
+function saveProfile(){
+ profile.name=$("displayName").value.trim()||"Guest";
+ profile.bio=$("bio").value.trim();
+ if(user){user.name=profile.name;save("hub_user",user);}
+ save("hub_profile",profile);
+ $("loginButton").textContent=user?"👤 "+user.name:"🔐 Login / Sign Up";
+ renderProfile();alert("Profile saved.");
 }
-function applyTheme() {
- const dark=$('themeSelect').value==='dark';
- document.body.style.setProperty('--bg',dark?'#10191e':'#f3f7f8');
- document.body.style.setProperty('--card',dark?'#1c2a31':'#fff');
- document.body.style.setProperty('--text',dark?'#e8f1f3':'#20313a');
- document
+function signup(){
+ const n=$("signupName").value.trim();
+ const e=$("signupEmail").value.trim().toLowerCase();
+ const p=$("signupPassword").value;
+ if(!n||!e||p.length<6){$("authMessage").textContent="Enter your name, email and password (at least 6 characters).";return;}
+ if(accounts.some(a=>a.email===e)){$("authMessage").textContent="Email already registered. Please login.";return;}
+ accounts.push({name:n,email:e,password:p});
+ if(!save("hub_accounts",accounts))return;
+ user={name:n,email:e};profile.name=n;
+ save("hub_user",user);save("hub_profile",profile);
+ $("authMessage").textContent="Demo account created.";
+ $("loginButton").textContent="👤 "+n;page("profile");
+}
+function login(){
+ const e=$("loginEmail").value.trim().toLowerCase();
+ const p=$("loginPassword").value;
+ const a=accounts.find(a=>a.email===e&&a.password===p);
+ if(!a){$("authMessage").textContent="Login failed. Check details or sign up.";return;}
+ user={name:a.name,email:a.email};profile.name=a.name;
+ save("hub_user",user);save("hub_profile",profile);
+ $("loginButton").textContent="👤 "+a.name;
+ $("authMessage").textContent="Login successful.";page("profile");
+}
+function logout(){
+ user=null;save("hub_user",null);
+ $("loginButton").textContent="🔐 Login / Sign Up";
+ $("authMessage").textContent="You are logged out.";renderProfile();
+}
+function setTheme(){
+ document.body.classList.toggle("dark",$("theme").value==="dark");
+ save("hub_theme",$("theme").value);
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify({posts,videos,profile},null,2)],{type:"application/json"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);a.download="my-social-hub-data.json";a.click();
+ URL.revokeObjectURL(a.href);
+}
+function clearData(){
+ if(!confirm("Delete all demo posts and videos?"))return;
+ posts=[];videos=[];save("hub_posts",posts);save("hub_videos",videos);
+ renderPosts();renderVideos();
+}
+$("theme").value=load("hub_theme","light");
+setTheme();
+$("loginButton").textContent=user?"👤 "+user.name:"🔐 Login / Sign Up";
+renderPosts();
+renderVideos();
+</script>
+</body>
+</html>
