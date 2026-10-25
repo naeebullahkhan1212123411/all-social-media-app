@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Social Media App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+      text-align: center;
+      padding: 25px;
+    }
+    .box {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 25px;
+      background: #1e293b;
+      border-radius: 18px;
+    }
+    h1 { color: #38bdf8; }
+    input, textarea, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 13px;
+      margin-top: 12px;
+      border-radius: 9px;
+      font-size: 16px;
+    }
+    input, textarea {
+      background: #f8fafc;
+      color: #111827;
+      border: none;
+    }
+    button {
+      background: #0ea5e9;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .social {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .social span {
+      background: #334155;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    #status { color: #86efac; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>All Social Media</h1>
+    <p>ایک ویڈیو، تمام سوشل میڈیا کے لیے!</p>
+
+    <div class="social">
+      <span>TikTok</span>
+      <span>YouTube</span>
+      <span>Facebook</span>
+      <span>Instagram</span>
+    </div>
+
+    <h3>اپنی ویڈیو منتخب کریں</h3>
+    <input type="file" id="video" accept="video/*">
+
+    <h3>ویڈیو کی تفصیل</h3>
+    <textarea id="caption" rows="3"
+      placeholder="ویڈیو کے بارے میں لکھیں..."></textarea>
+
+    <button onclick="previewVideo()">ویڈیو چیک کریں</button>
+    <p id="status"></p>
+    <video id="preview" controls
+      style="display:none;width:100%;margin-top:15px;"></video>
+  </div>
+
+  <script>
+    function previewVideo() {
+      const file = document.getElementById('video').files[0];
+      const status = document.getElementById('status');
+      const preview = document.getElementById('preview');
+
+      if (!file) {
+        status.textContent = 'پہلے اپنی ویڈیو منتخب کریں۔';
+        return;
+      }
+
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+      status.textContent = 'ویڈیو منتخب ہوگئی! آپ اسے دیکھ سکتے ہیں۔';
+    }
+  </script>
+</body>
+</html>
